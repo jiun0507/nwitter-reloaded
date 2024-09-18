@@ -1,7 +1,7 @@
 import { addDoc, collection, updateDoc } from "firebase/firestore";
 import { useState } from "react";
 import { styled } from "styled-components";
-import { auth, db, storage } from "../firebase";
+import { ACTIVITY_FEEDS_AGGREGATE_DB_PATH, ACTIVITY_FEEDS_USER_DB_PATH, auth, db, storage } from "../firebase";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 
 const Form = styled.form`
@@ -62,6 +62,7 @@ const SubmitBtn = styled.input`
 export default function PostTweetForm() {
   const [isLoading, setLoading] = useState(false);
   const [tweet, setTweet] = useState("");
+  const [fileType, setFileType] = useState<"photo" | "video" | null>(null);
   const [file, setFile] = useState<File | null>(null);
   const onChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setTweet(e.target.value);
@@ -69,7 +70,9 @@ export default function PostTweetForm() {
   const onFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { files } = e.target;
     if (files && files.length === 1) {
-      setFile(files[0]);
+      const selectedFile = files[0];
+      setFile(selectedFile);
+      setFileType(selectedFile.type.startsWith("image/") ? "photo" : "video");
     }
   };
   const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -78,18 +81,30 @@ export default function PostTweetForm() {
     if (!user || isLoading || tweet === "" || tweet.length > 180) return;
     try {
       setLoading(true);
-      const doc = await addDoc(collection(db, "tweets"), {
+      console.log(ACTIVITY_FEEDS_AGGREGATE_DB_PATH, ACTIVITY_FEEDS_USER_DB_PATH, user?.uid);
+      console.log(`${ACTIVITY_FEEDS_USER_DB_PATH}/${user?.uid}`);
+      const aggregateFeedDoc = await addDoc(collection(db, ACTIVITY_FEEDS_AGGREGATE_DB_PATH), {
         tweet,
         createdAt: Date.now(),
         username: user.displayName || "Anonymous",
         userId: user.uid,
       });
+      const doc = await addDoc(collection(db, `${ACTIVITY_FEEDS_USER_DB_PATH}/${user?.uid}`), {
+        tweet,
+        createdAt: Date.now(),
+        username: user.displayName || "Anonymous",
+        userId: user.uid,
+        aggregateFeedDocId: aggregateFeedDoc.id,
+      });
       if (file) {
-        const locationRef = ref(storage, `tweets/${user.uid}/${doc.id}`);
+        const locationRef = ref(storage, `${ACTIVITY_FEEDS_USER_DB_PATH}/${user.uid}/${doc.id}`);
         const result = await uploadBytes(locationRef, file);
         const url = await getDownloadURL(result.ref);
         await updateDoc(doc, {
-          photo: url,
+          [fileType as string]: url,
+        });
+        await updateDoc(aggregateFeedDoc, {
+          [fileType as string]: url,
         });
       }
       setTweet("");
@@ -111,13 +126,13 @@ export default function PostTweetForm() {
         placeholder="What is happening?!"
       />
       <AttachFileButton htmlFor="file">
-        {file ? "Photo added ✅" : "Add photo"}
+      {file && fileType ? `${fileType?.charAt(0).toUpperCase() + fileType?.slice(1)} added ✅` : "Add photo or video"}
       </AttachFileButton>
       <AttachFileInput
         onChange={onFileChange}
         type="file"
         id="file"
-        accept="image/*"
+        accept="image/*, video/*"
       />
       <SubmitBtn
         type="submit"

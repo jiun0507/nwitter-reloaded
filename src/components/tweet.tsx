@@ -1,78 +1,442 @@
-import { styled } from "styled-components";
-import { ITweet } from "./timeline";
-import { auth, db, storage } from "../firebase";
-import { deleteDoc, doc } from "firebase/firestore";
-import { deleteObject, ref } from "firebase/storage";
+// src/components/tweet.tsx
+
+import styled from "styled-components";
+import { ITweet } from "./timeline"; // Ensure ITweet is correctly imported
+import {
+  ACTIVITY_FEEDS_AGGREGATE_DB_PATH,
+  ACTIVITY_FEEDS_USER_DB_PATH,
+  auth,
+  db,
+  storage,
+} from "../firebase";
+import {
+  deleteDoc,
+  doc,
+  updateDoc,
+  increment,
+  collection,
+  addDoc,
+  Timestamp,
+  onSnapshot,
+  query,
+  orderBy,
+} from "firebase/firestore";
+import { deleteObject, ref as storageRef } from "firebase/storage";
+import { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
+
+// Define Styled Components
 
 const Wrapper = styled.div`
-  display: grid;
-  grid-template-columns: 3fr 1fr;
+  display: flex;
+  flex-direction: column;
   padding: 20px;
-  border: 1px solid rgba(255, 255, 255, 0.5);
-  border-radius: 15px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1); /* Almost invisible separator */
+  background-color: #ffffff; /* Optional: Add background for better contrast */
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); /* Slight elevation */
+  margin-bottom: 10px; /* Reduced margin for subtle separation */
 `;
 
-const Column = styled.div`
-  &:last-child {
-    place-self: end;
-  }
+const Header = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 10px;
 `;
 
 const Photo = styled.img`
-  width: 100px;
-  height: 100px;
-  border-radius: 15px;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  object-fit: cover;
+  cursor: pointer; /* Indicates clickability */
+  transition: transform 0.2s;
+
+  &:hover {
+    transform: scale(1.05); /* Slight zoom effect on hover */
+  }
 `;
 
 const Username = styled.span`
   font-weight: 600;
-  font-size: 15px;
+  font-size: 16px;
+  color: #28a745; /* Changed to green */
 `;
 
 const Payload = styled.p`
   margin: 10px 0px;
-  font-size: 18px;
+  font-size: 21px; /* Increased font size */
+  word-wrap: break-word;
+  color: #333333; /* Dark gray for better readability */
+`;
+
+const Media = styled.div`
+  margin: 10px 0px;
+  img,
+  video {
+    width: 100%;
+    max-width: 500px;
+    border-radius: 15px;
+    object-fit: cover;
+  }
 `;
 
 const DeleteButton = styled.button`
   background-color: tomato;
   color: white;
   font-weight: 600;
-  border: 0;
+  border: none;
   font-size: 12px;
   padding: 5px 10px;
   text-transform: uppercase;
   border-radius: 5px;
   cursor: pointer;
+  align-self: flex-start;
 `;
 
-export default function Tweet({ username, photo, tweet, userId, id }: ITweet) {
+const Actions = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  margin-top: 10px;
+  /* Align actions to the left */
+  justify-content: flex-start;
+`;
+
+const ActionButton = styled.button`
+  display: flex;
+  align-items: center;
+  gap: 5px; /* Space between icon and text */
+  background-color: transparent;
+  border: none;
+  color: #28a745; /* Green text */
+  cursor: pointer;
+  font-size: 14px;
+
+  &:hover {
+    text-decoration: underline;
+  }
+
+  /* Remove default button styles */
+  padding: 0;
+`;
+
+const LikeButton = styled(ActionButton)`
+  /* Additional styles if needed */
+  font-size: 18px;
+`;
+
+const CommentButton = styled(ActionButton)`
+  /* Additional styles if needed */
+`;
+
+// Optional: Styled Components for Icons to avoid inline styles
+const Icon = styled.img`
+  width: 16px; /* Adjust as needed */
+  height: 16px; /* Adjust as needed */
+`;
+
+const LikeIcon = styled(Icon)`
+  /* Additional styles for Like icon if needed */
+`;
+
+const CommentIcon = styled(Icon)`
+  /* Additional styles for Comment icon if needed */
+`;
+
+// Correctly Typed Styled Component
+const CommentsSection = styled.div<{ visible: string }>`
+  margin-top: 15px;
+  display: ${({ visible }) => (visible === "true" ? "block" : "none")};
+`;
+
+const CommentList = styled.div`
+  max-height: 200px;
+  overflow-y: auto;
+  margin-bottom: 10px;
+`;
+
+const Comment = styled.div`
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin-bottom: 10px;
+  background-color: #f9f9f9; /* Light gray background for readability */
+  padding: 10px;
+  border-radius: 10px;
+`;
+
+const CommentPhoto = styled.img`
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  object-fit: cover;
+`;
+
+const CommentContent = styled.div`
+  display: flex;
+  flex-direction: column;
+`;
+
+const CommentHeader = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 5px;
+`;
+
+const CommentUsername = styled.span`
+  font-weight: 600;
+  font-size: 14px;
+  color: #1d9bf0; /* Blue or your preferred color */
+`;
+
+const CommentText = styled.p`
+  margin: 5px 0;
+  font-size: 14px;
+  word-wrap: break-word;
+  color: #333333; /* Dark gray for readability */
+`;
+
+const CommentTimestamp = styled.small`
+  color: #666666; /* Darker gray for timestamp */
+  font-size: 12px;
+`;
+
+const CommentInputContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+`;
+
+const CommentInput = styled.textarea`
+  width: 100%;
+  padding: 8px;
+  border-radius: 10px;
+  border: 1px solid #ccc;
+  resize: vertical;
+  color: #333333; /* Ensure text inside textarea is visible */
+`;
+
+const SubmitButton = styled.button`
+  align-self: flex-end;
+  padding: 5px 10px;
+  background-color: #1d9bf0;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+
+  &:disabled {
+    background-color: #a0cfff;
+    cursor: not-allowed;
+  }
+`;
+
+export interface IComment {
+  id: string;
+  userId: string;
+  username: string;
+  profilePhotoURL?: string;
+  content: string;
+  timestamp: Timestamp; // or Date
+}
+
+export default function Tweet({
+  username,
+  photo,
+  video,
+  tweet,
+  userId,
+  id,
+  canDelete,
+  userPhoto,
+  aggregateFeedDocId,
+  likesCount = 0,
+  dislikesCount = 0,
+}: ITweet) {
   const user = auth.currentUser;
+  const [currentLikes, setCurrentLikes] = useState<number>(likesCount);
+  const [commentText, setCommentText] = useState<string>("");
+  const [tweetComments, setTweetComments] = useState<IComment[]>([]);
+  const [commentsVisible, setCommentsVisible] = useState<string>("false");
+
+  useEffect(() => {
+    // Set up real-time listener for comments
+    const commentsCollectionRef = collection(
+      db,
+      `${ACTIVITY_FEEDS_USER_DB_PATH}/${userId}`,
+      id,
+      "comments"
+    );
+    const commentsQueryObj = query(commentsCollectionRef, orderBy("timestamp", "asc"));
+
+    const unsubscribe = onSnapshot(
+      commentsQueryObj,
+      (snapshot) => {
+        const fetchedComments: IComment[] = snapshot.docs.map((doc) => {
+          const data = doc.data();
+          return {
+            id: doc.id,
+            userId: data.userId,
+            username: data.username,
+            profilePhotoURL: data.profilePhotoURL || "",
+            content: data.content,
+            timestamp: data.timestamp,
+          };
+        });
+        setTweetComments(fetchedComments);
+      },
+      (error) => {
+        console.error("Error fetching comments:", error);
+      }
+    );
+
+    return () => {
+      unsubscribe();
+    };
+  }, [userId, id]);
+
   const onDelete = async () => {
     const ok = confirm("Are you sure you want to delete this tweet?");
     if (!ok || user?.uid !== userId) return;
     try {
-      await deleteDoc(doc(db, "tweets", id));
+      // Delete from user-specific feed
+      await deleteDoc(doc(db, `${ACTIVITY_FEEDS_USER_DB_PATH}/${user.uid}`, id));
+      // Delete from aggregate feed
+      if (aggregateFeedDocId) {
+        await deleteDoc(doc(db, ACTIVITY_FEEDS_AGGREGATE_DB_PATH, aggregateFeedDocId));
+      }
+      // Delete associated media
       if (photo) {
-        const photoRef = ref(storage, `tweets/${user.uid}/${id}`);
+        const photoRef = storageRef(storage, `${ACTIVITY_FEEDS_USER_DB_PATH}/${user.uid}/${id}/photo`);
         await deleteObject(photoRef);
       }
+      if (video) {
+        const videoRef = storageRef(storage, `${ACTIVITY_FEEDS_USER_DB_PATH}/${user.uid}/${id}/video`);
+        await deleteObject(videoRef);
+      }
     } catch (e) {
-      console.log(e);
-    } finally {
-      //
+      console.error("Error deleting tweet:", e);
     }
   };
+
+  const handleLike = async () => {
+    if (!user) return;
+    try {
+      const tweetDocRef = doc(db, ACTIVITY_FEEDS_AGGREGATE_DB_PATH, id);
+      await updateDoc(tweetDocRef, {
+        likesCount: increment(1),
+      });
+      setCurrentLikes((prev) => prev + 1);
+    } catch (error) {
+      console.error("Error liking tweet:", error);
+    }
+  };
+
+  const handleAddComment = async () => {
+    if (!user || commentText.trim() === "") return;
+    try {
+      const commentsCollectionRef = collection(
+        db,
+        `${ACTIVITY_FEEDS_USER_DB_PATH}/${userId}`,
+        id,
+        "comments"
+      );
+      const newComment = {
+        userId: user.uid,
+        username: user.displayName || "Anonymous",
+        profilePhotoURL: user.photoURL || "/default-avatar.png", // Ensure default avatar exists
+        content: commentText.trim(),
+        timestamp: Timestamp.now(),
+      };
+      await addDoc(commentsCollectionRef, newComment);
+      setCommentText("");
+      // Automatically show comments after adding
+      setCommentsVisible("true");
+    } catch (error) {
+      console.error("Error adding comment:", error);
+    }
+  };
+
+  const toggleComments = () => {
+    if (commentsVisible === "true") {
+      setCommentsVisible("false");
+    } else {
+      setCommentsVisible("true");
+    }
+  };
+
   return (
     <Wrapper>
-      <Column>
+      <Header>
+        <Link to={`/profile/${userId}`}>
+          {userPhoto ? (
+            <Photo src={userPhoto} alt={`${username}'s profile`} />
+          ) : (
+            <Photo src="/default-profile.png" alt="Default profile" /> // Corrected path
+          )}
+        </Link>
         <Username>{username}</Username>
-        <Payload>{tweet}</Payload>
-        {user?.uid === userId ? (
-          <DeleteButton onClick={onDelete}>Delete</DeleteButton>
-        ) : null}
-      </Column>
-      <Column>{photo ? <Photo src={photo} /> : null}</Column>
+      </Header>
+      <Payload>{tweet}</Payload>
+      <Media>
+        {photo && <img src={photo} alt="Tweet media" />}
+        {video && (
+          <video controls>
+            <source src={video} type="video/mp4" />
+            Your browser does not support the video tag.
+          </video>
+        )}
+      </Media>
+      {user?.uid === userId && canDelete && (
+        <DeleteButton onClick={onDelete}>Delete</DeleteButton>
+      )}
+      <Actions>
+        <LikeButton onClick={handleLike} aria-label="Like">
+          <LikeIcon src="/trophy.png" alt="Like" />
+          {currentLikes}
+        </LikeButton>
+        <CommentButton onClick={toggleComments} aria-label="Comments">
+          <CommentIcon src="/comment.png" alt="Comment" />
+          {tweetComments.length}
+        </CommentButton>
+      </Actions>
+      <CommentsSection visible={commentsVisible}>
+        <CommentList>
+          {tweetComments.map((comment) => (
+            <Comment key={comment.id}>
+              <CommentPhoto
+                src={comment.profilePhotoURL || "/default-avatar.png"} // Ensure this image exists
+                alt={`${comment.username}'s avatar`}
+              />
+              <CommentContent>
+                <CommentHeader>
+                  <CommentUsername>{comment.username}</CommentUsername>
+                  <CommentTimestamp>
+                    {comment.timestamp.toDate().toLocaleString()}
+                  </CommentTimestamp>
+                </CommentHeader>
+                <CommentText>{comment.content}</CommentText>
+              </CommentContent>
+            </Comment>
+          ))}
+        </CommentList>
+        {user && (
+          <CommentInputContainer>
+            <CommentInput
+              rows={2}
+              placeholder="Add a comment..."
+              value={commentText}
+              onChange={(e) => setCommentText(e.target.value)}
+            />
+            <SubmitButton
+              onClick={handleAddComment}
+              disabled={commentText.trim() === ""}
+            >
+              Submit
+            </SubmitButton>
+          </CommentInputContainer>
+        )}
+      </CommentsSection>
     </Wrapper>
   );
 }

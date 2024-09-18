@@ -1,5 +1,6 @@
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import Layout from "./components/layout";
+import NoMenuLayout from "./components/noMenuLayout";
 import Home from "./routes/home";
 import Profile from "./routes/profile";
 import Login from "./routes/login";
@@ -10,6 +11,10 @@ import { useEffect, useState } from "react";
 import LoadingScreen from "./components/loading-screen";
 import { auth } from "./firebase";
 import ProtectedRoute from "./components/protected-route";
+import ChatList from "./routes/chat-list";
+import { ChatRoom } from "./routes/chat-room";
+import EditProfile from "./routes/edit-profile";
+import PostTweet from "./routes/post-tweet";
 
 const router = createBrowserRouter([
   {
@@ -22,13 +27,44 @@ const router = createBrowserRouter([
     children: [
       {
         path: "",
+
         element: <Home />,
       },
       {
         path: "profile",
         element: <Profile />,
       },
+      {
+        path: "edit-profile",
+        element: <EditProfile />,
+      },
     ],
+  },
+  {
+    path: "/",
+    element: (
+      <ProtectedRoute>
+        <NoMenuLayout />
+      </ProtectedRoute>
+    ),
+    children: [
+      {
+        path: "chatrooms",
+        element: <ChatList />,
+      },
+      {
+        path: "chatrooms/:channelId",
+        element: <ChatRoom />,
+      },
+      {
+        path: "post",
+        element: <PostTweet />,
+      },
+    ],
+  },
+  {
+    path: "profile/:userId",
+    element: <Profile />,
   },
   {
     path: "/login",
@@ -46,32 +82,75 @@ const GlobalStyles = createGlobalStyle`
     box-sizing: border-box;
   }
   body {
-    background-color: black;
-    color:white;
+    background-color: white;
+    color: white;
     font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    line-height: 1.5;
+    font-size: 16px;
+  }
+  
+  @media (max-width: 768px) {
+    body {
+      font-size: 14px;
+    }
+  }
+
+  a {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  button, input, textarea {
+    font-family: inherit;
+    font-size: inherit;
   }
 `;
 
-const Wrapper = styled.div`
-  height: 100vh;
+const AppWrapper = styled.div`
+  max-width: 100%;
+  min-height: 100vh;
   display: flex;
-  justify-content: center;
+  flex-direction: column;
+`;
+
+const ContentWrapper = styled.div`
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 20px;
+
+  @media (max-width: 768px) {
+    padding: 10px;
+  }
 `;
 
 function App() {
   const [isLoading, setLoading] = useState(true);
+  
   const init = async () => {
     await auth.authStateReady();
     setLoading(false);
   };
+
   useEffect(() => {
     init();
   }, []);
+
   return (
-    <Wrapper>
+    <AppWrapper>
       <GlobalStyles />
-      {isLoading ? <LoadingScreen /> : <RouterProvider router={router} />}
-    </Wrapper>
+      {isLoading ? (
+        <LoadingScreen />
+      ) : (
+        <ContentWrapper>
+          <RouterProvider router={router} />
+        </ContentWrapper>
+      )}
+    </AppWrapper>
   );
 }
 
