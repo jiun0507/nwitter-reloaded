@@ -44,8 +44,8 @@ const Header = styled.div`
 `;
 
 const Photo = styled.img`
-  width: 50px;
-  height: 50px;
+  width: 32px;
+  height: 32px;
   border-radius: 50%;
   object-fit: cover;
   cursor: pointer; /* Indicates clickability */
@@ -58,13 +58,13 @@ const Photo = styled.img`
 
 const Username = styled.span`
   font-weight: 600;
-  font-size: 16px;
+  font-size: 14px;
   color: #28a745; /* Changed to green */
 `;
 
 const Payload = styled.p`
   margin: 10px 0px;
-  font-size: 21px; /* Increased font size */
+  font-size: 16px; /* Increased font size */
   word-wrap: break-word;
   color: #333333; /* Dark gray for better readability */
 `;
@@ -251,7 +251,6 @@ export default function Tweet({
   userPhoto,
   aggregateFeedDocId,
   likesCount = 0,
-  dislikesCount = 0,
 }: ITweet) {
   const user = auth.currentUser;
   const [currentLikes, setCurrentLikes] = useState<number>(likesCount);

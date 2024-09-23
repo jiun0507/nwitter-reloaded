@@ -24,7 +24,6 @@ export interface ITweet {
   createdAt: Timestamp; // Converted from Timestamp to Date
   canDelete: boolean;
   likesCount?: number;
-  dislikesCount?: number;
   likes?: string[];
 }
 

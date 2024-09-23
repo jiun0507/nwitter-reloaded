@@ -14,6 +14,11 @@ import ProtectedRoute from "./components/protected-route";
 import ChatList from "./routes/chat-list";
 import { ChatRoom } from "./routes/chat-room";
 import EditProfile from "./routes/edit-profile";
+import EditPhoto from "./routes/edit-photo";
+import EditDescription from "./routes/edit-description";
+import EditNickname from "./routes/edit-nickname";
+import EditGolfInfo from "./routes/edit-golf-info";
+import ManageGolfScores from "./routes/manage-golf-scores";
 import PostTweet from "./routes/post-tweet";
 
 const router = createBrowserRouter([
@@ -37,6 +42,26 @@ const router = createBrowserRouter([
       {
         path: "edit-profile",
         element: <EditProfile />,
+      },
+      {
+        path: "edit-nickname",
+        element: <EditNickname />,
+      },
+      {
+        path: "edit-photo",
+        element: <EditPhoto />,
+      },
+      {
+        path: "edit-description",
+        element: <EditDescription />,
+      },
+      {
+        path: "edit-golf-info",
+        element: <EditGolfInfo />,
+      },
+      {
+        path: "manage-golf-scores",
+        element: <ManageGolfScores />,
       },
     ],
   },
@@ -124,7 +149,7 @@ const ContentWrapper = styled.div`
   padding: 20px;
 
   @media (max-width: 768px) {
-    padding: 10px;
+    padding: 0px;
   }
 `;
 

@@ -8,24 +8,26 @@ import styled from "styled-components";
 // Styled Components
 
 const Wrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
   padding: 10px 20px; /* Keeps 20px padding on left and right */
-  max-width: 600px;   /* Adjust as needed */
-  margin: 0 auto;
+  width: 100%;  /* Adjust as needed */
   min-height: 100vh;
   justify-content: center;
 `;
 
+const PhotoContainer = styled.div`
+  text-align: center; /* Centers content horizontally */
+  margin-bottom: 20px; /* Space between photo and form */
+`;
+
 const Photo = styled.img`
+  margin: 0 auto; /* Center the image horizontally */
+  margin-top: 50px;
   width: 200px;
   height: 200px;
   border-radius: 50%;
   object-fit: cover;
   cursor: pointer;
   transition: transform 0.2s;
-  margin-bottom: 10px; /* Reduced from 20px to 10px */
 
   &:hover {
     transform: scale(1.05);
@@ -47,6 +49,14 @@ const Form = styled.form`
   margin-top: 0;    /* Removed any top margin if present */
 `;
 
+const StyledLabel = styled.label`
+  width: 100%;
+  font-size: 14px;
+  margin-bottom: 0px; /* Spacing between label and input */
+  text-align: left; /* Align the label to the left */
+  color: #2D2D2D; /* Label color */
+`;
+
 const StyledInput = styled.input`
   width: 100%;          /* Takes full width of the Form */
   padding: 10px 0;
@@ -55,6 +65,7 @@ const StyledInput = styled.input`
   border-bottom: 2px solid #ccc;
   font-size: 16px;
   outline: none;
+  color: #A6A6A6;
 
   &:focus {
     border-bottom: 2px solid #555;
@@ -149,22 +160,26 @@ export default function CreateAccount() {
 
   return (
     <Wrapper>
-      <Photo src="/birdie-logo.png" alt="BIRDIE Logo" />
+      <PhotoContainer>
+        <Photo src="/birdie-logo.png" alt="BIRDIE Logo" />
+      </PhotoContainer>
       <Title>BIRDIE</Title>
       <Form onSubmit={onSubmit}>
+        <StyledLabel>이메일</StyledLabel>
         <StyledInput
           onChange={onChange}
           name="email"
           value={email}
-          placeholder="Email"
+          placeholder="메일주소를 입력하세요"
           type="email"
           required
         />
+        <StyledLabel>비밀번호</StyledLabel>
         <StyledInput
           onChange={onChange}
           value={password}
           name="password"
-          placeholder="Password"
+          placeholder="비밀번호를 입력하세요"
           type="password"
           required
         />
