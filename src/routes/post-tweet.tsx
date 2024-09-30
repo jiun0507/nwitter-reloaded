@@ -71,58 +71,13 @@ const SubmitButton = styled.button`
   }
 `;
 
-const EmojiPickerContainer = styled.div`
-  position: relative;
-`;
-
-const EmojiButton = styled.button`
-  background: none;
-  border: none;
-  cursor: pointer;
-  font-size: 24px;
-`;
-
-const EmojiList = styled.ul`
-  position: absolute;
-  bottom: 60px;
-  left: 0;
-  display: flex;
-  flex-wrap: wrap;
-  width: 200px;
-  max-height: 150px;
-  overflow-y: auto;
-  background-color: white;
-  border: 1px solid #ccc;
-  border-radius: 10px;
-  list-style: none;
-  padding: 10px;
-  margin: 0;
-  z-index: 100;
-`;
-
-const EmojiItem = styled.li`
-  cursor: pointer;
-  font-size: 24px;
-  margin: 5px;
-  &:hover {
-    transform: scale(1.2);
-  }
-`;
-
-const emojis = ["😀","😂","😍","👍","🙏","🔥","🎉","❤️","😎","😊","😉","😢","😡","😱","🤔","😴","🤗","🥰","🤩","😇"];
 
 export default function PostTweet() {
   const [tweetContent, setTweetContent] = useState<string>("");
   const [selectedPhoto, setSelectedPhoto] = useState<File | null>(null);
   const [selectedVideo, setSelectedVideo] = useState<File | null>(null);
-  const [showEmojiPicker, setShowEmojiPicker] = useState<boolean>(false);
   const navigate = useNavigate();
   const user = auth.currentUser;
-
-  const handleEmojiSelect = (emoji: string) => {
-    setTweetContent(prev => prev + emoji);
-    setShowEmojiPicker(false);
-  };
 
   const handlePhotoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
