@@ -15,6 +15,7 @@ import ChatList from "./routes/chat-list";
 import { ChatRoom } from "./routes/chat-room";
 import EditProfile from "./routes/edit-profile";
 import EditPhoto from "./routes/edit-photo";
+import EditBackgroundPhotos from "./routes/edit-background-photos";
 import EditDescription from "./routes/edit-description";
 import EditNickname from "./routes/edit-nickname";
 import EditGolfInfo from "./routes/edit-golf-info";
@@ -32,7 +33,6 @@ const router = createBrowserRouter([
     children: [
       {
         path: "",
-
         element: <Home />,
       },
       {
@@ -52,6 +52,10 @@ const router = createBrowserRouter([
         element: <EditPhoto />,
       },
       {
+        path: "edit-background-photos",
+        element: <EditBackgroundPhotos />,
+      },
+      {
         path: "edit-description",
         element: <EditDescription />,
       },
@@ -62,6 +66,14 @@ const router = createBrowserRouter([
       {
         path: "manage-golf-scores",
         element: <ManageGolfScores />,
+      },
+      {
+        path: "chatrooms",
+        element: <ChatList />,
+      },
+      {
+        path: "post",
+        element: <PostTweet />,
       },
     ],
   },
@@ -74,16 +86,8 @@ const router = createBrowserRouter([
     ),
     children: [
       {
-        path: "chatrooms",
-        element: <ChatList />,
-      },
-      {
         path: "chatrooms/:channelId",
         element: <ChatRoom />,
-      },
-      {
-        path: "post",
-        element: <PostTweet />,
       },
     ],
   },
@@ -163,6 +167,7 @@ function App() {
 
   useEffect(() => {
     init();
+    document.title = "버디: 골프 SNS";
   }, []);
 
   return (

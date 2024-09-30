@@ -1,8 +1,6 @@
-// src/pages/Profile.tsx
-
-import { styled } from "styled-components";
+import { styled, createGlobalStyle } from "styled-components";
 import { ACTIVITY_FEEDS_USER_DB_PATH, auth, db, storage } from "../firebase";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { updateProfile } from "firebase/auth";
 import {
@@ -19,9 +17,21 @@ import { ITweet } from "../components/timeline";
 import Tweet from "../components/tweet";
 import { useParams, useNavigate } from "react-router-dom";
 
+// Define the prop type for BackgroundPhotoContainer
+interface BackgroundPhotoProps {
+  bgUrl: string;
+}
+
+// Global Style for box-sizing
+const GlobalStyle = createGlobalStyle`
+  *, *::before, *::after {
+    box-sizing: border-box;
+  }
+`;
+
 const Wrapper = styled.div`
   display: flex;
-  align-items: flex-start; 
+  align-items: flex-start;
   flex-direction: column;
   gap: 0px;
   color: #ffffff;
@@ -29,13 +39,105 @@ const Wrapper = styled.div`
   min-height: 100vh;
   padding: 20px;
   width: 100%;
-  box-sizing: border-box;
+`;
+
+const BackgroundPhotoContainer = styled.div<BackgroundPhotoProps>`
+  position: relative;
+  width: 100%;
+  height: 400px;
+  background-image: url(${props => props.bgUrl});
+  background-size: cover;
+  background-position: center;
+  border-radius: 10px;
+  margin-bottom: 20px;
+`;
+
+const BackButton = styled.button`
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  background: rgba(0, 0, 0, 0.5);
+  border: none;
+  color: #ffffff;
+  font-size: 24px;
+  cursor: pointer;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  &:hover {
+    background: rgba(0, 0, 0, 0.7);
+  }
+`;
+
+const CameraButton = styled.button`
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: rgba(0, 0, 0, 0.5);
+  border: none;
+  cursor: pointer;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  &:hover {
+    background: rgba(0, 0, 0, 0.7);
+  }
+
+  img {
+    width: 20px;
+    height: 20px;
+  }
+`;
+
+const DotsContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 20px;
+`;
+
+const BackgroundDot = styled.div<{ isActive: boolean }>`
+  width: 10px;
+  height: 10px;
+  background-color: ${props => (props.isActive ? "#FFFFFF" : "#3E8B4D")};
+  border-radius: 50%;
+  cursor: pointer;
+`;
+
+const BackgroundNavButton = styled.button<{ direction: 'left' | 'right' }>`
+  position: absolute;
+  top: 50%;
+  ${(props) => (props.direction === 'left' ? 'left: 10px;' : 'right: 10px;')}
+  transform: translateY(-50%);
+  background-color: rgba(0, 0, 0, 0.5);
+  border: none;
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  color: #ffffff;
+  cursor: pointer;
+  z-index: 10;
+
+  &:hover {
+    background-color: rgba(0, 0, 0, 0.7);
+  }
+
+  pointer-events: auto;
 `;
 
 const ProfileHeader = styled.div`
   display: flex;
   align-items: center;
-  justify-content: space-between; /* Space between elements */
+  justify-content: space-between;
   gap: 20px;
   width: 100%;
   margin-bottom: 20px;
@@ -141,7 +243,7 @@ const GolfInfoItem = styled.div`
   display: flex;
   flex-direction: column;
   gap: 5px;
-  
+
   span {
     &:first-child {
       font-weight: bold;
@@ -164,27 +266,59 @@ const GolfInfoItemContent = styled.div`
   font-size: 16px;
 `;
 
-/* Updated GolfScores and related components */
+const GolfScoresContainer = styled.div`
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+`;
+
 const GolfScores = styled.div`
   display: flex;
+  flex-wrap: nowrap;
   overflow-x: auto;
   padding: 10px 0;
   background-color: #0f3e22;
   border-radius: 14px;
   gap: 20px;
+
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+
+  scroll-behavior: smooth;
+  max-width: 100%;
+
+  @media (max-width: 768px) {
+    padding: 8px 0;
+    gap: 15px;
+  }
+
+  @media (max-width: 480px) {
+    padding: 6px 0;
+    gap: 10px;
+  }
 `;
 
 const ScoreItem = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
+  flex: 0 0 auto;
   min-width: 60px;
+  max-width: 60px;
+  height: 150px;
 `;
 
 const ScoreValue = styled.div`
   font-size: 14px;
   color: #A2E3AD;
   margin-bottom: 5px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 `;
 
 const ScoreLine = styled.div`
@@ -207,6 +341,22 @@ const Dot = styled.div`
 const ScoreDate = styled.div`
   font-size: 12px;
   color: #FFFFFF;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+`;
+
+const NameContainer = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 8px;
+
+  @media (max-width: 480px) {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+  }
 `;
 
 const ChatButton = styled.button`
@@ -218,6 +368,7 @@ const ChatButton = styled.button`
   cursor: pointer;
   font-size: 16px;
   align-self: flex-start;
+
   &:hover {
     background-color: #0d8ae0;
   }
@@ -231,6 +382,7 @@ const EditButton = styled.button`
   border-radius: 5px;
   cursor: pointer;
   font-size: 12px;
+
   &:hover {
     background-color: #45a049;
   }
@@ -242,6 +394,27 @@ const Tweets = styled.div`
   flex-direction: column;
   gap: 10px;
   max-width: 600px;
+`;
+
+const NavigationButton = styled.button<{ direction: 'left' | 'right' }>`
+  position: absolute;
+  top: 50%;
+  ${(props) => (props.direction === 'left' ? 'left: 10px;' : 'right: 10px;')}
+  transform: translateY(-50%);
+  background-color: rgba(0, 0, 0, 0.5);
+  border: none;
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  color: #ffffff;
+  cursor: pointer;
+  z-index: 10;
+
+  &:hover {
+    background-color: rgba(0, 0, 0, 0.7);
+  }
+
+  pointer-events: auto;
 `;
 
 interface GolfScore {
@@ -259,9 +432,10 @@ interface UserGolfInfo {
   description: string;
   numberOfEagles: number | null;
   holeInOneExperience: boolean | null;
-  scores  : GolfScore[];
+  scores: GolfScore[];
   favoriteGolfer: string;
   golfEquipment: string;
+  backgroundPhotoUrlList: string[];
 }
 
 interface UserProfile {
@@ -281,6 +455,33 @@ export default function Profile() {
   const [minScore, setMinScore] = useState<number | null>(null);
   const [maxScore, setMaxScore] = useState<number | null>(null);
   const navigate = useNavigate();
+  const golfScoresRef = useRef<HTMLDivElement>(null);
+  const [backgroundPhotos, setBackgroundPhotos] = useState<string[]>([]);
+  const [currentBackgroundIndex, setCurrentBackgroundIndex] = useState<number>(0);
+
+  const handleBackClick = () => {
+    navigate("/");
+  };
+
+  const handleCameraClick = () => {
+    navigate("/edit-background-photos");
+  };
+
+  const handleDotClick = (index: number) => {
+    setCurrentBackgroundIndex(index);
+  };
+
+  const handleBackgroundPrev = () => {
+    setCurrentBackgroundIndex(prevIndex => 
+      prevIndex === 0 ? backgroundPhotos.length - 1 : prevIndex - 1
+    );
+  };
+
+  const handleBackgroundNext = () => {
+    setCurrentBackgroundIndex(prevIndex => 
+      prevIndex === backgroundPhotos.length - 1 ? 0 : prevIndex + 1
+    );
+  };
 
   const handleChatButtonClick = async () => {
     if (!currentUser || !currentProfileUserId) return;
@@ -301,6 +502,24 @@ export default function Profile() {
 
   const handleAddScoreClick = () => {
     navigate('/manage-golf-scores');
+  };
+
+  const handleScrollLeft = () => {
+    if (golfScoresRef.current) {
+      golfScoresRef.current.scrollBy({
+        left: -100,
+        behavior: 'smooth',
+      });
+    }
+  };
+
+  const handleScrollRight = () => {
+    if (golfScoresRef.current) {
+      golfScoresRef.current.scrollBy({
+        left: 100,
+        behavior: 'smooth',
+      });
+    }
   };
 
   useEffect(() => {
@@ -356,7 +575,6 @@ export default function Profile() {
           date: score.date,
           score: Number(score.score),
         }));
-        console.log("scores ",userData,  recentGolfScores, parsedGolfScores);
         if (parsedGolfScores.length > 0) {
           const scoresValues = parsedGolfScores.map(score => score.score);
           const minScoreValue = Math.min(...scoresValues);
@@ -365,8 +583,13 @@ export default function Profile() {
           setMaxScore(maxScoreValue);
         }
 
+        // Initialize background photos from user data
+        const fetchedBackgroundPhotos = userData.backgroundPhotoUrlList || [];
+        setBackgroundPhotos(fetchedBackgroundPhotos);
+        setCurrentBackgroundIndex(0);
+
         setProfile({
-          displayName: userData.name,
+          displayName: userData.displayName,
           photoURL: userData?.photoURL || null,
           golfInfo: {
             nickname: userData.nickname,
@@ -381,6 +604,7 @@ export default function Profile() {
             scores: parsedGolfScores,
             favoriteGolfer: userData.favoriteGolfer,
             golfEquipment: userData.golfEquipment,
+            backgroundPhotoUrlList: fetchedBackgroundPhotos,
           },
         });
       }
@@ -415,6 +639,7 @@ export default function Profile() {
           aggregateFeedDocId: data.aggregateFeedDocId || null,
           canDelete: canDelete,
           likesCount: data.likesCount || 0,
+          likes: data.likes || [],
           dislikesCount: data.dislikesCount || 0
         };
       });
@@ -436,6 +661,44 @@ export default function Profile() {
 
   return (
     <Wrapper>
+      <GlobalStyle />
+
+      {/* Background Photo Section */}
+      <BackgroundPhotoContainer bgUrl={backgroundPhotos[currentBackgroundIndex]}>
+        {/* Back Button */}
+        <BackButton onClick={handleBackClick} aria-label="Go Back">←</BackButton>
+        
+        {/* Show Camera Icon only for current user */}
+        {isCurrentUser && (
+          <CameraButton onClick={handleCameraClick} aria-label="Edit Background Photos">
+            <img src="/camera.png" alt="Edit Background Photos" />
+          </CameraButton>
+        )}
+        
+        {/* Navigation Buttons for sliding background photos */}
+        {backgroundPhotos.length > 1 && (
+          <>
+            <BackgroundNavButton direction="left" onClick={handleBackgroundPrev} aria-label="Previous Background Photo">◀</BackgroundNavButton>
+            <BackgroundNavButton direction="right" onClick={handleBackgroundNext} aria-label="Next Background Photo">▶</BackgroundNavButton>
+          </>
+        )}
+      </BackgroundPhotoContainer>
+      
+      {/* Dots Container moved below the background photo and above the avatar */}
+      {backgroundPhotos.length > 1 && (
+        <DotsContainer>
+          {backgroundPhotos.slice(0, 5).map((_, index) => (
+            <BackgroundDot
+              key={index}
+              isActive={index === currentBackgroundIndex}
+              onClick={() => handleDotClick(index)}
+              aria-label={`Select background photo ${index + 1}`}
+            />
+          ))}
+        </DotsContainer>
+      )}
+
+      {/* Profile Header */}
       <ProfileHeader>
         <AvatarNameContainer>
           <AvatarUpload htmlFor="avatar">
@@ -460,24 +723,27 @@ export default function Profile() {
               />
             )}
           </AvatarUpload>
-          <div>
-            <Nickname>{profile?.golfInfo?.nickname ?? "Anonymous"}</Nickname>
-            <Name>{profile?.displayName ?? "Anonymous"}</Name>
-          </div>
+          <NameContainer>
+            <Nickname>{profile?.displayName ?? "Anonymous"}</Nickname>
+            <Name>{profile?.golfInfo?.name ?? "Anonymous"}</Name>
+          </NameContainer>
         </AvatarNameContainer>
         {isCurrentUser && (
           <EditButton onClick={handleEditProfileClick}>계정</EditButton>
         )}
       </ProfileHeader>
 
+      {/* Profile Description */}
       {profile?.golfInfo?.description && (
         <Description>{profile.golfInfo.description}</Description>
       )}
 
+      {/* Chat Button for non-current users */}
       {!isCurrentUser && (
         <ChatButton onClick={handleChatButtonClick}>Start Chat</ChatButton>
       )}
 
+      {/* Golf Scores Section */}
       {profile?.golfInfo?.scores && profile.golfInfo.scores.length > 0 && (
         <>
           <Separator />
@@ -487,33 +753,42 @@ export default function Profile() {
               <EditButton onClick={handleAddScoreClick}>기록</EditButton>
             )}
           </GolfScoresHeader>
-          <GolfScores>
-            {profile.golfInfo.scores
-              .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
-              .map((score, index) => {
-                const minS = minScore ?? score.score;
-                const maxS = maxScore ?? score.score;
-                const scoreRange = maxS - minS || 1; // Avoid division by zero
+          <GolfScoresContainer>
+            <NavigationButton direction="left" onClick={handleScrollLeft} aria-label="Scroll Left">
+              ◀
+            </NavigationButton>
+            <NavigationButton direction="right" onClick={handleScrollRight} aria-label="Scroll Right">
+              ▶
+            </NavigationButton>
+            <GolfScores ref={golfScoresRef}>
+              {profile.golfInfo.scores
+                .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
+                .map((score, index) => {
+                  const minS = minScore ?? score.score;
+                  const maxS = maxScore ?? score.score;
+                  const scoreRange = maxS - minS || 1;
 
-                const positionPercentage =
-                  ((maxS - score.score) / scoreRange) * 100;
+                  const positionPercentage =
+                    ((maxS - score.score) / scoreRange) * 100;
 
-                const formattedDate = new Date(score.date).toISOString().slice(2, 10); // yy-mm-dd
+                  const formattedDate = new Date(score.date).toISOString().slice(2, 10);
 
-                return (
-                  <ScoreItem key={index}>
-                    <ScoreValue>{score.score}</ScoreValue>
-                    <ScoreLine>
-                      <Dot style={{ bottom: `${positionPercentage}%` }} />
-                    </ScoreLine>
-                    <ScoreDate>{formattedDate}</ScoreDate>
-                  </ScoreItem>
-                );
-              })}
-          </GolfScores>
+                  return (
+                    <ScoreItem key={index}>
+                      <ScoreValue>{score.score}</ScoreValue>
+                      <ScoreLine>
+                        <Dot style={{ bottom: `${positionPercentage}%` }} />
+                      </ScoreLine>
+                      <ScoreDate>{formattedDate}</ScoreDate>
+                    </ScoreItem>
+                  );
+                })}
+            </GolfScores>
+          </GolfScoresContainer>
         </>
       )}
 
+      {/* Golf Info Section */}
       {profile?.golfInfo && (
         <>
           <Separator />
@@ -558,6 +833,7 @@ export default function Profile() {
         </>
       )}
 
+      {/* Tweets Section */}
       <Tweets>
         {tweets.map((tweet) => (
           <Tweet key={tweet.id} {...tweet} />

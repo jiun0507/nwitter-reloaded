@@ -17,6 +17,34 @@ const Wrapper = styled.div`
   color: #ffffff; /* White text */
 `;
 
+const BackButtonContainer = styled.div`
+  width: 100%;
+  display: flex;
+  align-items: center;
+  padding: 10px 20px;
+  background-color: #213829;
+`;
+
+const BackButton = styled.button`
+  background: none;
+  border: none;
+  color: #ffffff;
+  font-size: 18px;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  transition: color 0.2s;
+  
+  &:hover {
+    color: #9ccd8d; /* Light green on hover */
+  }
+`;
+
+const BackArrowIcon = styled.span`
+  font-size: 24px;
+  margin-right: 8px;
+`;
+
 const SectionTitle = styled.h2`
   font-size: 18px;
   color: #9ccd8d; /* Light green color for section titles */
@@ -109,6 +137,12 @@ export default function EditProfile() {
 
   return (
     <Wrapper>
+      <BackButtonContainer>
+        <BackButton onClick={() => navigate("/profile")}>
+          <BackArrowIcon>←</BackArrowIcon>
+          프로필로 돌아가기
+        </BackButton>
+      </BackButtonContainer>
       <SectionTitle>프로필</SectionTitle>
       <ProfileButton onClick={() => handleNavigation("/edit-nickname")}>
         닉네임

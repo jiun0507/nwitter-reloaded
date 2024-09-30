@@ -1,5 +1,3 @@
-// src/pages/EditNickname.tsx
-
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { updateProfile } from 'firebase/auth';
@@ -7,6 +5,7 @@ import { auth, db } from '../firebase';
 import { doc, getDoc, updateDoc } from 'firebase/firestore';
 import styled from 'styled-components';
 
+// Styled Components
 const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
@@ -37,6 +36,29 @@ const Button = styled.button`
   &:hover {
     background-color: #0d8ae0;
   }
+`;
+
+const BackButton = styled.button`
+  background-color: #213829;
+  border: none;
+  padding: 10px 15px;
+  color: #ffffff;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+  transition: background-color 0.2s;
+
+  &:hover {
+    background-color: #1a2d23;
+  }
+`;
+
+const ArrowIcon = styled.span`
+  font-size: 20px;
+  margin-right: 8px;
 `;
 
 const EditNickname = () => {
@@ -84,6 +106,10 @@ const EditNickname = () => {
 
   return (
     <Wrapper>
+      <BackButton onClick={() => navigate('/edit-profile')}>
+        <ArrowIcon>←</ArrowIcon>
+        프로필로 돌아가기
+      </BackButton>
       <h2>닉네임 변경</h2>
       <form onSubmit={handleSubmit}>
         <Input

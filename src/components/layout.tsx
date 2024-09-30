@@ -10,25 +10,25 @@ const Wrapper = styled.div`
 
 const Menu = styled.div`
   position: fixed;
-  bottom: 20px;
+  bottom: 16px;
   left: 0;
   right: 0;
+  padding: 16px;
   display: flex;
   justify-content: space-between;
   padding: 0 16px; /* 16px padding on both sides */
   z-index: 1000; /* Ensures the menu is above other content */
+  align-items: center;
+  align-self: stretch;
 `;
 
 const LeftMenu = styled.div`
   display: flex;
   align-items: center;
   background: #dcff4e;
-  padding: 10px 16px;
-  border-top-right-radius: 16px; /* Less rounded */
-  border-bottom-right-radius: 16px; /* Less rounded */
-  border-top-left-radius: 8px; /* Slightly rounded for aesthetic */
-  border-bottom-left-radius: 8px; /* Slightly rounded for aesthetic */
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  width:48px;
+  height:48px;
+  border-radius: 14px;
 `;
 
 const RightMenu = styled.div`
@@ -36,11 +36,8 @@ const RightMenu = styled.div`
   align-items: center;
   background: #054807;
   padding: 10px 16px;
-  border-top-left-radius: 16px; /* Less rounded */
-  border-bottom-left-radius: 16px; /* Less rounded */
-  border-top-right-radius: 8px; /* Slightly rounded for aesthetic */
-  border-bottom-right-radius: 8px; /* Slightly rounded for aesthetic */
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  height:50px;
+  border-radius: 14px;
 `;
 
 const MenuItem = styled.div`
@@ -52,15 +49,35 @@ const MenuItem = styled.div`
   width: 32px; /* Adjusted to 32px as specified */
   margin: 0 8px; /* 16px total spacing between icons */
   flex-shrink: 0; /* Prevent shrinking */
-
   img,
   svg {
     width: 24px; /* Reduced size to fit within 32px container */
     height: 24px;
+    width: 40px; 
+    height: 40px;
+    object-fit: cover;
+    
+  }
+  &.log-out svg {
+    fill: #fff; /* Set the logout icon color to white */
+  }
+`;
+const Profile = styled.div`
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 32px; /* Adjusted to 32px as specified */
+  width: 32px; /* Adjusted to 32px as specified */
+  margin: 0 8px; /* 16px total spacing between icons */
+  flex-shrink: 0; /* Prevent shrinking */
+  img,
+  svg {
+    width: 32px; 
+    height: 32px;
     object-fit: cover;
     border-radius: ${(props) => (props.className === "profile" ? "50%" : "0")}; /* Circular for profile */
   }
-
   &.log-out svg {
     fill: #fff; /* Set the logout icon color to white */
   }
@@ -68,7 +85,7 @@ const MenuItem = styled.div`
 
 export default function Layout() {
   const user = auth.currentUser;
-  const avatarPhotoURL = user && user.photoURL ? user.photoURL : '/default-avatar.png';
+  const avatarPhotoURL = user && user.photoURL ? user.photoURL : '/default-profile.png';
 
   const navigate = useNavigate();
 
@@ -91,7 +108,7 @@ export default function Layout() {
         {/* Left Menu with Posting Button */}
         <LeftMenu>
           <MenuItem onClick={onPostTweet}>
-            <img src="/post.png" alt="Post" />
+            <img src="icon_plus_deepgreen.svg" alt="Post" />
           </MenuItem>
         </LeftMenu>
 
@@ -99,18 +116,18 @@ export default function Layout() {
         <RightMenu>
           <Link to="/">
             <MenuItem>
-              <img src="/home.png" alt="Home" />
+              <img src="/icon_home_softgreen.svg" alt="Home" />
             </MenuItem>
           </Link>
           <Link to="/chatrooms">
             <MenuItem>
-              <img src="/union.png" alt="Chatrooms" />
+              <img src="/icon_chat_softgreen.svg" alt="Chatrooms" />
             </MenuItem>
           </Link>
           <Link to="/profile">
-            <MenuItem className="profile">
+            <Profile className="profile">
               <img src={avatarPhotoURL} alt="Profile" />
-            </MenuItem>
+            </Profile>
           </Link>
           <MenuItem onClick={onLogOut} className="log-out">
             <svg

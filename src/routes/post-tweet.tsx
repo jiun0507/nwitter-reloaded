@@ -214,7 +214,7 @@ export default function PostTweet() {
     <Wrapper>
       <Form onSubmit={handleSubmit}>
         <TextArea
-          placeholder="What's happening?"
+          placeholder="골프에 관한건 뭐든지 공유해주세요."
           value={tweetContent}
           onChange={(e) => setTweetContent(e.target.value)}
         />
@@ -259,22 +259,8 @@ export default function PostTweet() {
               onChange={handleVideoChange}
             />
           </IslandButton>
-          <EmojiPickerContainer>
-            <EmojiButton type="button" onClick={() => setShowEmojiPicker(prev => !prev)}>
-              😊 {/* Unicode Smile Emoji */}
-            </EmojiButton>
-            {showEmojiPicker && (
-              <EmojiList>
-                {emojis.map((emoji, index) => (
-                  <EmojiItem key={index} onClick={() => handleEmojiSelect(emoji)}>
-                    {emoji}
-                  </EmojiItem>
-                ))}
-              </EmojiList>
-            )}
-          </EmojiPickerContainer>
         </ButtonsContainer>
-        <SubmitButton type="submit">Tweet</SubmitButton>
+        <SubmitButton type="submit">작성</SubmitButton>
       </Form>
     </Wrapper>
   );

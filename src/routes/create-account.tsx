@@ -232,7 +232,7 @@ export default function CreateAccount() {
   };
 
   const handleStart = () => {
-    navigate("/home");
+    navigate("/");
   };
 
   return (

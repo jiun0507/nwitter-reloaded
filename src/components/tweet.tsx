@@ -20,6 +20,8 @@ import {
   onSnapshot,
   query,
   orderBy,
+  arrayUnion,
+  arrayRemove,
 } from "firebase/firestore";
 import { deleteObject, ref as storageRef } from "firebase/storage";
 import { useState, useEffect } from "react";
@@ -120,9 +122,9 @@ const ActionButton = styled.button`
   padding: 0;
 `;
 
-const LikeButton = styled(ActionButton)`
-  /* Additional styles if needed */
-  font-size: 18px;
+const LikeButton = styled(ActionButton)<{ liked: boolean }>`
+  color: ${({ liked }) => (liked ? "#1d9bf0" : "#28a745")}; /* Blue if liked, green if not */
+  font-weight: ${({ liked }) => (liked ? "bold" : "normal")};
 `;
 
 const CommentButton = styled(ActionButton)`
@@ -137,10 +139,14 @@ const Icon = styled.img`
 
 const LikeIcon = styled(Icon)`
   /* Additional styles for Like icon if needed */
+  width:26px;
+  height:26px;
 `;
 
 const CommentIcon = styled(Icon)`
   /* Additional styles for Comment icon if needed */
+  width:26px;
+  height:26px;
 `;
 
 // Correctly Typed Styled Component
@@ -251,10 +257,12 @@ export default function Tweet({
   userPhoto,
   aggregateFeedDocId,
   likesCount = 0,
+  likes = [],
 }: ITweet) {
   const user = auth.currentUser;
   const [currentLikes, setCurrentLikes] = useState<number>(likesCount);
   const [commentText, setCommentText] = useState<string>("");
+  const [likesArray, setLikesArray] = useState<string[]>(likes);
   const [tweetComments, setTweetComments] = useState<IComment[]>([]);
   const [commentsVisible, setCommentsVisible] = useState<string>("false");
 
@@ -322,12 +330,26 @@ export default function Tweet({
     if (!user) return;
     try {
       const tweetDocRef = doc(db, ACTIVITY_FEEDS_AGGREGATE_DB_PATH, id);
-      await updateDoc(tweetDocRef, {
-        likesCount: increment(1),
-      });
-      setCurrentLikes((prev) => prev + 1);
+
+      if (likesArray.includes(user.uid)) {
+        // User has already liked the tweet, so unlike it
+        await updateDoc(tweetDocRef, {
+          likesCount: increment(-1),
+          likes: arrayRemove(user.uid),
+        });
+        setCurrentLikes((prev) => prev - 1);
+        setLikesArray((prev) => prev.filter((uid) => uid !== user.uid));
+      } else {
+        // User has not liked the tweet yet
+        await updateDoc(tweetDocRef, {
+          likesCount: increment(1),
+          likes: arrayUnion(user.uid),
+        });
+        setCurrentLikes((prev) => prev + 1);
+        setLikesArray((prev) => [...prev, user.uid]);
+      }
     } catch (error) {
-      console.error("Error liking tweet:", error);
+      console.error("Error liking/unliking tweet:", error);
     }
   };
 
@@ -343,7 +365,7 @@ export default function Tweet({
       const newComment = {
         userId: user.uid,
         username: user.displayName || "Anonymous",
-        profilePhotoURL: user.photoURL || "/default-avatar.png", // Ensure default avatar exists
+        profilePhotoURL: user.photoURL || "/default-profile.svg", // Ensure default avatar exists
         content: commentText.trim(),
         timestamp: Timestamp.now(),
       };
@@ -371,7 +393,7 @@ export default function Tweet({
           {userPhoto ? (
             <Photo src={userPhoto} alt={`${username}'s profile`} />
           ) : (
-            <Photo src="/default-profile.png" alt="Default profile" /> // Corrected path
+            <Photo src="/default-profile.svg" alt="Default profile" /> // Corrected path
           )}
         </Link>
         <Username>{username}</Username>
@@ -389,22 +411,29 @@ export default function Tweet({
       {user?.uid === userId && canDelete && (
         <DeleteButton onClick={onDelete}>Delete</DeleteButton>
       )}
-      <Actions>
-        <LikeButton onClick={handleLike} aria-label="Like">
-          <LikeIcon src="/trophy.png" alt="Like" />
-          {currentLikes}
-        </LikeButton>
+      {canDelete ? (<></>) : (
+        <>
+        <Actions>
+          <LikeButton
+            onClick={handleLike}
+            aria-label="Like"
+            liked={likesArray.includes(user?.uid || "")}
+          >
+            <LikeIcon src="/icon_trophy_deepgreen.svg" alt="Like" />
+            {currentLikes}
+          </LikeButton>
         <CommentButton onClick={toggleComments} aria-label="Comments">
-          <CommentIcon src="/comment.png" alt="Comment" />
+          <CommentIcon src="/icon_comment_deepgreen.svg" alt="Comment" />
           {tweetComments.length}
         </CommentButton>
       </Actions>
+        </>)}
       <CommentsSection visible={commentsVisible}>
         <CommentList>
           {tweetComments.map((comment) => (
             <Comment key={comment.id}>
               <CommentPhoto
-                src={comment.profilePhotoURL || "/default-avatar.png"} // Ensure this image exists
+                src={comment.profilePhotoURL || "/default-profile.svg"} // Ensure this image exists
                 alt={`${comment.username}'s avatar`}
               />
               <CommentContent>

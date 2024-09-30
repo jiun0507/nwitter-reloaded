@@ -39,6 +39,29 @@ const Button = styled.button`
   }
 `;
 
+const BackButton = styled.button`
+  background-color: #213829;
+  border: none;
+  padding: 10px 15px;
+  color: #ffffff;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+  transition: background-color 0.2s;
+
+  &:hover {
+    background-color: #1a2d23;
+  }
+`;
+
+const ArrowIcon = styled.span`
+  font-size: 20px;
+  margin-right: 8px;
+`;
+
 const EditDescription = () => {
   const [description, setDescription] = useState<string>('');
   const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -83,6 +106,10 @@ const EditDescription = () => {
 
   return (
     <Wrapper>
+      <BackButton onClick={() => navigate('/edit-profile')}>
+        <ArrowIcon>←</ArrowIcon>
+        프로필로 돌아가기
+      </BackButton>
       <h2>자기소개 변경</h2>
       <form onSubmit={handleSubmit}>
         <Textarea

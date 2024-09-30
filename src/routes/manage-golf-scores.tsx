@@ -13,6 +13,12 @@ const Wrapper = styled.div`
   min-height: 100vh;
 `;
 
+const ErrorMessage = styled.div`
+  color: #ff6b6b;
+  margin-bottom: 10px;
+  text-align: center;
+`;
+
 const Header = styled.div`
   display: flex;
   justify-content: space-between;
@@ -202,6 +208,8 @@ const ManageGolfScores = () => {
     date: '',
   });
   const [isEditing, setIsEditing] = useState<boolean>(false);
+  const [editingIndex, setEditingIndex] = useState<number | null>(null);
+  const [error, setError] = useState<string>('');
 
   useEffect(() => {
     const fetchScores = async () => {
@@ -222,25 +230,62 @@ const ManageGolfScores = () => {
 
   const handleEdit = (index: number) => {
     setCurrentScore(scores[index]);
+    setEditingIndex(index);
     setIsEditing(true);
     setIsModalOpen(true);
+    setError('');
   };
 
   const handleDelete = () => {
-    const updatedScores = scores.filter((score) => score !== currentScore);
+    if (editingIndex === null) return;
+    const updatedScores = scores.filter((_, idx) => idx !== editingIndex);
     setScores(updatedScores);
     saveScores(updatedScores);
     setIsModalOpen(false);
+    setEditingIndex(null);
+  };
+
+  const isValidDate = (dateString: string): boolean => {
+    const [year, month, day] = dateString.split('-').map(Number);
+    const date = new Date(year, month - 1, day);
+    return (
+      date.getFullYear() === year &&
+      date.getMonth() === month - 1 &&
+      date.getDate() === day
+    );
   };
 
   const handleSave = () => {
-    const updatedScores = isEditing
-      ? scores.map((score) => (score === currentScore ? currentScore : score))
-      : [...scores, currentScore];
+    // Reset previous errors
+    setError('');
 
-    setScores(updatedScores);
-    saveScores(updatedScores);
+    // Validate score
+    const scoreNumber = Number(currentScore.score);
+    if (isNaN(scoreNumber) || scoreNumber < 60 || scoreNumber > 150) {
+      setError('스코어는 60에서 150 사이의 숫자여야 합니다.');
+      return;
+    }
+
+    // Validate date
+    if (!isValidDate(currentScore.date)) {
+      setError('유효한 날짜를 선택해주세요.');
+      return;
+    }
+
+    if (isEditing && editingIndex !== null) {
+      const updatedScores = scores.map((score, idx) =>
+        idx === editingIndex ? currentScore : score
+      );
+      setScores(updatedScores);
+      saveScores(updatedScores);
+    } else {
+      const updatedScores = [...scores, currentScore];
+      setScores(updatedScores);
+      saveScores(updatedScores);
+    }
+
     setIsModalOpen(false);
+    setEditingIndex(null);
   };
 
   const saveScores = async (newScores: { score: string; date: string }[]) => {
@@ -257,11 +302,15 @@ const ManageGolfScores = () => {
     setIsModalOpen(true);
     setCurrentScore({ score: '', date: '' });
     setIsEditing(false);
+    setEditingIndex(null);
+    setError('');
   };
 
   const closeModal = () => {
     setIsModalOpen(false);
     setCurrentScore({ score: '', date: '' });
+    setEditingIndex(null);
+    setError('');
   };
 
   const handleDateChange = (type: string, value: string) => {
@@ -314,6 +363,7 @@ const ManageGolfScores = () => {
                 )}
               </div>
             </ModalHeader>
+            {error && <ErrorMessage>{error}</ErrorMessage>}
             <InputField>
               {/* Score Picker */}
               <ScrollablePicker>

@@ -13,6 +13,16 @@ const firebaseConfig = {
   measurementId: "G-XEGW4LLJE6"
 };
 
+const firebaseProdConfig = {
+  apiKey: "AIzaSyATea2bDOiESqpcbKLHyvUWyBibPNE8Gxg",
+  authDomain: "birdie-prod-4321d.firebaseapp.com",
+  projectId: "birdie-prod-4321d",
+  storageBucket: "birdie-prod-4321d.appspot.com",
+  messagingSenderId: "1070771921750",
+  appId: "1:1070771921750:web:8664798d5dbc60a0ce6cf7",
+  measurementId: "G-3DJ4TC3WNW"
+};
+
 const app = initializeApp(firebaseConfig);
 
 export const auth = getAuth(app);
