@@ -29,7 +29,7 @@ export interface ITweet {
 
 const Wrapper = styled.div`
   display: flex;
-  gap: 10px;
+  gap: 0px;
   flex-direction: column;
   overflow-y: scroll;
 `;

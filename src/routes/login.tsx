@@ -8,7 +8,7 @@ import styled from "styled-components";
 // Styled Components
 
 const Wrapper = styled.div`
-  padding: 10px 20px; /* Keeps 20px padding on left and right */
+  padding: 0; /* Keeps 20px padding on left and right */
   width: 100%;  /* Adjust as needed */
   min-height: 100vh;
   justify-content: center;
@@ -34,41 +34,49 @@ const Photo = styled.img`
   }
 `;
 
-const Title = styled.h1`
-  font-size: 28px;
-  margin-bottom: 15px; /* Reduced from 30px to 15px */
-  text-align: center;
-`;
 
 const Form = styled.form`
   width: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 0 10px; /* Keeps 10px padding on left and right */
-  margin-top: 0;    /* Removed any top margin if present */
+  padding: 0; 
+  margin-top: 0;  
+`;
+
+const FormItem = styled.div`
+  margin-top:16px;
+  display: flex;
+  position:relative;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: flex-start;
+  align-self: stretch;
 `;
 
 const StyledLabel = styled.label`
-  width: 100%;
+  position:absolute;
+  left:24px;
+  top:6px;
   font-size: 14px;
-  margin-bottom: 0px; /* Spacing between label and input */
-  text-align: left; /* Align the label to the left */
+  text-align: left; 
   color: #2D2D2D; /* Label color */
 `;
 
 const StyledInput = styled.input`
-  width: 100%;          /* Takes full width of the Form */
-  padding: 10px 0;
-  margin: 10px 0;       /* Adjusted margin for closer spacing */
+  width: 100%;  
+   
+  padding: 32px 24px 10px 24px;
   border: none;
-  border-bottom: 2px solid #ccc;
+
   font-size: 16px;
   outline: none;
   color: #A6A6A6;
 
+  border-bottom: 1px solid #E8E8E8;
+
   &:focus {
-    border-bottom: 2px solid #555;
+    border-bottom: 1px solid #013F03;
   }
 
   &::placeholder {
@@ -80,10 +88,11 @@ const SubmitButton = styled.button`
   background-color: black;
   color: white;
   padding: 12px 0;
-  margin: 10px 0;
-  width: 100%;          /* Takes full width of the Form */
+  margin-top: 32px;
+  width: calc(100vw - 48px);
+  height: 56px;
   border: none;
-  border-radius: 25px;
+  border-radius: 16px;
   cursor: pointer;
   font-size: 18px;
   font-weight: bold;
@@ -106,12 +115,12 @@ const Error = styled.div`
 `;
 
 const Switcher = styled.div`
-  margin-top: 20px; /* Reduced from 40px to 20px */
+  margin-top: 32px; 
   text-align: center;
   font-size: 16px;
 
   a {
-    color: #007BFF;
+    color: #6C6C6C;
     text-decoration: none;
     margin-left: 5px;
 
@@ -163,34 +172,39 @@ export default function CreateAccount() {
       <PhotoContainer>
         <Photo src="/birdie-logo.png" alt="BIRDIE Logo" />
       </PhotoContainer>
-      <Title>BIRDIE</Title>
       <Form onSubmit={onSubmit}>
-        <StyledLabel>이메일</StyledLabel>
-        <StyledInput
-          onChange={onChange}
-          name="email"
-          value={email}
-          placeholder="메일주소를 입력하세요"
-          type="email"
-          required
-        />
-        <StyledLabel>비밀번호</StyledLabel>
-        <StyledInput
-          onChange={onChange}
-          value={password}
-          name="password"
-          placeholder="비밀번호를 입력하세요"
-          type="password"
-          required
-        />
+        <FormItem>
+          <StyledLabel>이메일</StyledLabel>
+          <StyledInput
+            onChange={onChange}
+            name="email"
+            value={email}
+            placeholder="메일주소를 입력하세요"
+            type="email"
+            required
+          />
+        </FormItem>
+
+        <FormItem>
+          <StyledLabel>비밀번호</StyledLabel>
+          <StyledInput
+            onChange={onChange}
+            value={password}
+            name="password"
+            placeholder="비밀번호를 입력하세요"
+            type="password"
+            required
+          />
+        </FormItem>
+
+        
         <SubmitButton type="submit" disabled={isLoading}>
           {isLoading ? "로딩중..." : "로그인"}
         </SubmitButton>
       </Form>
       {error !== "" && <Error>{error}</Error>}
       <Switcher>
-        Don't have an account?
-        <Link to="/create-account">회원가입 &rarr;</Link>
+        <Link to="/create-account">회원가입</Link>
       </Switcher>
     </Wrapper>
   );

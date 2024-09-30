@@ -27,55 +27,64 @@ import { Link } from "react-router-dom";
 
 // Define Styled Components
 
+
+
 const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
-  padding: 20px;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.1); /* Almost invisible separator */
-  background-color: #ffffff; /* Optional: Add background for better contrast */
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); /* Slight elevation */
-  margin-bottom: 10px; /* Reduced margin for subtle separation */
+  padding-bottom: 16px;
+  padding-top:8px;
+  border-bottom: 1px solid #F2F2F2;
+  background-color: #ffffff; 
+  
 `;
 
 const Header = styled.div`
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 8px;
+  padding:0 16px;
+  height: 48px;
 `;
+
+
 
 const Photo = styled.img`
   width: 32px;
   height: 32px;
+  margin-bottom:-7px;
+  display:inline-block;
   border-radius: 50%;
   object-fit: cover;
   cursor: pointer; /* Indicates clickability */
   transition: transform 0.2s;
 
-  &:hover {
-    transform: scale(1.05); /* Slight zoom effect on hover */
-  }
+  // &:hover {
+  //   transform: scale(1.05); /* Slight zoom effect on hover */
+  // }
 `;
 
 const Username = styled.span`
   font-weight: 600;
   font-size: 14px;
-  color: #28a745; /* Changed to green */
+  color: #013F03;
 `;
 
 const Payload = styled.p`
-  margin: 10px 0px;
-  font-size: 16px; /* Increased font size */
+  padding:8px 16px 0px 16px;
+  font-size: 16px; 
+  line-height:2;
   word-wrap: break-word;
-  color: #333333; /* Dark gray for better readability */
+  color: #333333; 
 `;
 
 const Media = styled.div`
-  margin: 10px 0px;
+  padding:8px 16px 0px 16px ;
   img,
   video {
     width: 100%;
     max-width: 500px;
-    border-radius: 15px;
+    border-radius: 16px;
     object-fit: cover;
   }
 `;
@@ -95,10 +104,9 @@ const DeleteButton = styled.button`
 
 const Actions = styled.div`
   display: flex;
+  padding:8px 16px 0px 16px;
   align-items: center;
-  gap: 15px;
-  margin-top: 10px;
-  /* Align actions to the left */
+  gap: 24px;
   justify-content: flex-start;
 `;
 
@@ -108,9 +116,9 @@ const ActionButton = styled.button`
   gap: 5px; /* Space between icon and text */
   background-color: transparent;
   border: none;
-  color: #28a745; /* Green text */
+  color: #013F03;
   cursor: pointer;
-  font-size: 14px;
+  font-size: 18px;
 
   &:hover {
     text-decoration: underline;
@@ -136,11 +144,13 @@ const Icon = styled.img`
 `;
 
 const LikeIcon = styled(Icon)`
-  /* Additional styles for Like icon if needed */
+  width:26px;
+  height:26px;
 `;
 
 const CommentIcon = styled(Icon)`
-  /* Additional styles for Comment icon if needed */
+  width:26px;
+  height:26px;
 `;
 
 // Correctly Typed Styled Component
@@ -371,13 +381,13 @@ export default function Tweet({
           {userPhoto ? (
             <Photo src={userPhoto} alt={`${username}'s profile`} />
           ) : (
-            <Photo src="/default-profile.png" alt="Default profile" /> // Corrected path
+            <Photo src="/default_profile.svg" alt="Default profile" /> // Corrected path
           )}
         </Link>
         <Username>{username}</Username>
       </Header>
       <Payload>{tweet}</Payload>
-      <Media>
+      <Media style={{ display: photo || video ? 'block' : 'none' }}>
         {photo && <img src={photo} alt="Tweet media" />}
         {video && (
           <video controls>
@@ -391,11 +401,11 @@ export default function Tweet({
       )}
       <Actions>
         <LikeButton onClick={handleLike} aria-label="Like">
-          <LikeIcon src="/trophy.png" alt="Like" />
+          <LikeIcon src="/icon_trophy_deepgreen.svg" alt="Like" />
           {currentLikes}
         </LikeButton>
         <CommentButton onClick={toggleComments} aria-label="Comments">
-          <CommentIcon src="/comment.png" alt="Comment" />
+          <CommentIcon src="/icon_comment_deepgreen.svg" alt="Comment" />
           {tweetComments.length}
         </CommentButton>
       </Actions>
