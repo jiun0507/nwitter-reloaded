@@ -29,7 +29,6 @@ const Wrapper = styled.div`
   min-height: 100vh;
   padding: 20px;
   width: 100%;
-  box-sizing: border-box;
 `;
 
 const ProfileHeader = styled.div`
