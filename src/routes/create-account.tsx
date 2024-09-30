@@ -207,7 +207,7 @@ export default function CreateAccount() {
         });
         // Store user data in Firestore
         await setDoc(doc(db, "users", credentials.user.uid), {
-          nickname,
+          displayName: nickname,
           name,
           email,
           createdAt: Date.now(),

@@ -724,12 +724,14 @@ export default function Profile() {
             )}
           </AvatarUpload>
           <NameContainer>
-            <Nickname>{profile?.displayName ?? "Anonymous"}</Nickname>
-            <Name>{profile?.golfInfo?.name ?? "Anonymous"}</Name>
+            <Nickname>{profile?.displayName ?? ""}</Nickname>
+            <Name>{profile?.golfInfo?.name ?? ""}</Name>
           </NameContainer>
         </AvatarNameContainer>
-        {isCurrentUser && (
+        {isCurrentUser ? (
           <EditButton onClick={handleEditProfileClick}>계정</EditButton>
+        ) : (
+          <ChatButton onClick={handleChatButtonClick}>메시지</ChatButton>
         )}
       </ProfileHeader>
 
@@ -739,9 +741,7 @@ export default function Profile() {
       )}
 
       {/* Chat Button for non-current users */}
-      {!isCurrentUser && (
-        <ChatButton onClick={handleChatButtonClick}>Start Chat</ChatButton>
-      )}
+
 
       {/* Golf Scores Section */}
       {profile?.golfInfo?.scores && profile.golfInfo.scores.length > 0 && (

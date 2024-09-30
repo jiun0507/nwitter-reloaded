@@ -85,7 +85,7 @@ const Profile = styled.div`
 
 export default function Layout() {
   const user = auth.currentUser;
-  const avatarPhotoURL = user && user.photoURL ? user.photoURL : '/default-profile.png';
+  const avatarPhotoURL = user && user.photoURL ? user.photoURL : '/default-profile.svg';
 
   const navigate = useNavigate();
 

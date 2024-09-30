@@ -393,7 +393,7 @@ export default function Tweet({
           {userPhoto ? (
             <Photo src={userPhoto} alt={`${username}'s profile`} />
           ) : (
-            <Photo src="/default-profile.svg" alt="Default profile" /> // Corrected path
+            <Photo src="/default-profile.png" alt="Default profile" /> // Corrected path
           )}
         </Link>
         <Username>{username}</Username>
@@ -433,7 +433,7 @@ export default function Tweet({
           {tweetComments.map((comment) => (
             <Comment key={comment.id}>
               <CommentPhoto
-                src={comment.profilePhotoURL || "/default-profile.svg"} // Ensure this image exists
+                src={comment.profilePhotoURL || "/default-profile.png"} // Ensure this image exists
                 alt={`${comment.username}'s avatar`}
               />
               <CommentContent>
