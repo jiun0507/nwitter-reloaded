@@ -68,7 +68,7 @@ const StyledInput = styled.input`
    
   padding: 32px 24px 10px 24px;
   border: none;
-
+  border-radius: 0;
   font-size: 16px;
   outline: none;
   color: #A6A6A6;
