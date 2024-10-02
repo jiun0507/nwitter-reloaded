@@ -6,6 +6,7 @@ import { FirebaseError } from "firebase/app";
 import { doc, setDoc } from "firebase/firestore";
 import Button from "@mui/material/Button";
 import styled from 'styled-components';
+import '../style/style.css'; 
 
 const Wrapper = styled.div`
   width: 100%;
@@ -268,14 +269,9 @@ export default function CreateAccount() {
             type="button"
             variant="contained"
             onClick={handleStart}
+            className="primary"
             style={{
-              height: '48px',
-              borderRadius: '16px',
-              fontSize: '18px',
-              backgroundColor: 'var(--Lime-Vivid, #DCFF4E)',
-              marginTop: '16px',
-              width: '100%',
-              color: 'black',
+              width:'100%',
             }}
           >
             시작하기
@@ -289,15 +285,7 @@ export default function CreateAccount() {
               <Button
                 type="submit"
                 variant="contained"
-                style={{
-                  color: "black",
-                  height: '48px',
-                  borderRadius: '16px',
-                  fontSize: '18px',
-                  backgroundColor: '#DCFF4E',
-                  boxShadow: "none",
-                  textAlign:"center",
-                }}
+                className="primary"
               >
                 다음
               </Button>
@@ -306,13 +294,7 @@ export default function CreateAccount() {
               <Button
                 type="submit"
                 variant="contained"
-                style={{
-                  color: "black",
-                  height: '48px',
-                  borderRadius: '16px',
-                  fontSize: '18px',
-                  backgroundColor: 'var(--Lime-Vivid, #DCFF4E)',
-                }}
+                className="primary"
                 disabled={isLoading}
               >
                 {isLoading ? "로딩 중..." : "다음"}
@@ -396,7 +378,6 @@ export default function CreateAccount() {
                   type="number"
                 />
               </FormField>
-              <Separator />
 
               <FormField>
                 <InputLabel>평균 스코어</InputLabel>
@@ -408,7 +389,6 @@ export default function CreateAccount() {
                   type="number"
                 />
               </FormField>
-              <Separator />
 
               <FormField>
                 <InputLabel>드라이버 비거리 (미터)</InputLabel>
@@ -420,7 +400,6 @@ export default function CreateAccount() {
                   type="number"
                 />
               </FormField>
-              <Separator />
 
               <FormField>
                 <InputLabel>골프 경력 (년)</InputLabel>
@@ -432,7 +411,6 @@ export default function CreateAccount() {
                   type="number"
                 />
               </FormField>
-              <Separator />
 
               <FormField>
                 <InputLabel>최애 골프선수</InputLabel>
@@ -444,7 +422,6 @@ export default function CreateAccount() {
                   type="text"
                 />
               </FormField>
-              <Separator />
 
               <FormField>
                 <InputLabel>이글 수</InputLabel>
@@ -456,7 +433,6 @@ export default function CreateAccount() {
                   type="number"
                 />
               </FormField>
-              <Separator />
 
               <FormField>
                 <InputLabel>홀인원 경험</InputLabel>
