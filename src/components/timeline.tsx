@@ -32,6 +32,7 @@ export interface ITweet {
 
 const Wrapper = styled.div`
   display: flex;
+  margin-bottom:80px;
   gap: 0px;
   flex-direction: column;
   height: 100vh;

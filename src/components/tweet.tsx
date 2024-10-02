@@ -33,10 +33,8 @@ const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
   padding: 20px;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.1); /* Almost invisible separator */
-  background-color: #ffffff; /* Optional: Add background for better contrast */
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); /* Slight elevation */
-  margin-bottom: 10px; /* Reduced margin for subtle separation */
+  border-bottom: 1px solid #F2F2F2;
+  background-color: #ffffff; 
 `;
 
 const Header = styled.div`
@@ -65,7 +63,7 @@ const Username = styled.span`
 `;
 
 const Payload = styled.p`
-  margin: 10px 0px;
+  margin:0;
   font-size: 16px; /* Increased font size */
   word-wrap: break-word;
   color: #333333; /* Dark gray for better readability */
@@ -393,7 +391,7 @@ export default function Tweet({
           {userPhoto ? (
             <Photo src={userPhoto} alt={`${username}'s profile`} />
           ) : (
-            <Photo src="/default-profile.png" alt="Default profile" /> // Corrected path
+            <Photo src="/default_profile.svg" alt="Default profile" /> // Corrected path
           )}
         </Link>
         <Username>{username}</Username>
