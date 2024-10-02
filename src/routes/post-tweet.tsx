@@ -6,18 +6,27 @@ import { useNavigate } from "react-router-dom";
 import { auth, db, storage, ACTIVITY_FEEDS_USER_DB_PATH, ACTIVITY_FEEDS_AGGREGATE_DB_PATH } from "../firebase";
 import { getDownloadURL, ref as storageRef, uploadBytes } from "firebase/storage";
 import { collection, addDoc, serverTimestamp, updateDoc, doc } from "firebase/firestore";
+import Button from "@mui/material/Button";
 
 const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 40px;
+`;
+
+const Header = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  align-self: stretch;
+  padding:8px 0;
 `;
 
 const Form = styled.form`
   display: flex;
   flex-direction: column;
   width: 100%;
+  padding:0px 16px;
   max-width: 600px;
 `;
 
@@ -27,9 +36,14 @@ const TextArea = styled.textarea`
   padding: 10px;
   font-size: 18px;
   resize: none;
-  border: 1px solid #ccc;
+  border: none;
   border-radius: 10px;
   margin-bottom: 20px;
+  caret-color: #018F05; 
+  &:focus {
+    outline: none;
+    border: none; /* Focus 상태에서도 보더 없애기 */
+  }
 `;
 
 const ButtonsContainer = styled.div`
@@ -39,19 +53,7 @@ const ButtonsContainer = styled.div`
 `;
 
 const IslandButton = styled.label`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background-color: #f0f0f0;
-  color: #555;
-  width: 50px;
-  height: 50px;
-  border-radius: 25px;
-  cursor: pointer;
-  font-size: 24px; /* Increased font size for better visibility */
-  &:hover {
-    background-color: #e0e0e0;
-  }
+
 `;
 
 const HiddenInput = styled.input`
@@ -59,16 +61,7 @@ const HiddenInput = styled.input`
 `;
 
 const SubmitButton = styled.button`
-  padding: 15px;
-  background-color: #1d9bf0;
-  color: white;
-  border: none;
-  border-radius: 30px;
-  cursor: pointer;
-  font-size: 18px;
-  &:hover {
-    background-color: #0d8ae0;
-  }
+
 `;
 
 
@@ -78,6 +71,9 @@ export default function PostTweet() {
   const [selectedVideo, setSelectedVideo] = useState<File | null>(null);
   const navigate = useNavigate();
   const user = auth.currentUser;
+  const handleGoBack = () => {
+    navigate(-1); // 한 단계 뒤로 가기
+  };
 
   const handlePhotoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
@@ -167,7 +163,12 @@ export default function PostTweet() {
 
   return (
     <Wrapper>
+      
       <Form onSubmit={handleSubmit}>
+        <Header>
+          <img src="/icon_arrow_left.svg" alt="Post" onClick={handleGoBack} />
+          <SubmitButton type="submit" className="primary">올리기</SubmitButton>
+        </Header>
         <TextArea
           placeholder="골프에 관한건 뭐든지 공유해주세요."
           value={tweetContent}
@@ -197,7 +198,7 @@ export default function PostTweet() {
 
         <ButtonsContainer>
           <IslandButton htmlFor="photo-upload">
-            📷 {/* Unicode Camera Emoji */}
+            <img src="/icon_post_photo.svg" alt="Photo"/>
             <HiddenInput
               id="photo-upload"
               type="file"
@@ -206,7 +207,7 @@ export default function PostTweet() {
             />
           </IslandButton>
           <IslandButton htmlFor="video-upload">
-            🎥 {/* Unicode Video Camera Emoji */}
+          <img src="/icon_post_video.svg" alt="Video"/>
             <HiddenInput
               id="video-upload"
               type="file"
@@ -215,7 +216,7 @@ export default function PostTweet() {
             />
           </IslandButton>
         </ButtonsContainer>
-        <SubmitButton type="submit">작성</SubmitButton>
+        
       </Form>
     </Wrapper>
   );

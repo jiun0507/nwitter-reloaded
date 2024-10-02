@@ -25,15 +25,15 @@ button.primary {
     border-radius: 16px;
     font-Size: 18px;
     background-color: #DCFF4E;
+    border:none;
     margin-top: 16px;
     color: #013F03;
-    box-shadow: none;
     padding:0 16px;
-} 
+}
+ 
 
-button.primary:hover, button.primary:active, button.primary:focus {
-
+button,button:hover, button:active, button:focus {
     box-shadow: none;
-  
+
 } 
 

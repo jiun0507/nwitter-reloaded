@@ -6,7 +6,7 @@ import { FirebaseError } from "firebase/app";
 import { doc, setDoc } from "firebase/firestore";
 import Button from "@mui/material/Button";
 import styled from 'styled-components';
-import '../style/style.css'; 
+
 
 const Wrapper = styled.div`
   width: 100%;

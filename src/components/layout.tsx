@@ -1,6 +1,7 @@
 import { Link, Outlet, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { auth } from "../firebase";
+import '../style/style.css'; 
 
 const Wrapper = styled.div`
   position: relative;
