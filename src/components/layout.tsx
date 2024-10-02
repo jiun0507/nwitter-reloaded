@@ -100,7 +100,7 @@ export default function Layout() {
         {/* Left Menu with Posting Button */}
         <LeftMenu>
           <MenuItem onClick={onPostTweet}>
-            <img src="icon_plus_deepgreen.svg" alt="Post" />
+            <img src="/icon_plus_deepgreen.svg" alt="Post" />
           </MenuItem>
         </LeftMenu>
 
