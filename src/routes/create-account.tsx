@@ -10,7 +10,7 @@ import styled from 'styled-components';
 const Wrapper = styled.div`
   width: 100%;
   margin: 0 auto;
-  padding: 16px;
+  padding: 0;
 `;
 
 const Form = styled.form`
@@ -21,6 +21,7 @@ const Header = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
+  padding:20px 16px 16px 16px;
 `;
 
 const Title = styled.h1`
@@ -30,23 +31,35 @@ const Title = styled.h1`
 `;
 
 const InputLabel = styled.label`
+  position:absolute;
+  left:24px;
+  top:6px;
   font-size: 14px;
-  color: black;
-  display: block;
-  weight: 500;
-  margin-top: 16px;
+  text-align: left; 
+  color: #2D2D2D; 
 `;
 
 const InputField = styled.input`
-  font-size: 16px;
-  color: #A6A6A6;
-  width: 100%;
+  width: 100%;  
+  padding: 32px 24px 10px 24px;
   border: none;
-  padding: 8px 0;
-  ::placeholder {
-    color: #A6A6A6;
+  border-radius: 0;
+  font-size: 16px;
+  outline: none;
+  color: #A6A6A6;
+  border-bottom: 1px solid #E8E8E8;
+
+  &:focus {
+    border-bottom: 1px solid #013F03;
   }
+
+  &::placeholder {
+    color: #aaa;
+  }
+
+}
 `;
+
 
 const Separator = styled.hr`
   border: none;
@@ -64,7 +77,13 @@ const Switcher = styled.div`
 `;
 
 const FormField = styled.div`
-  margin-top: 16px;
+  margin-top:16px;
+  display: flex;
+  position:relative;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: flex-start;
+  align-self: stretch;
 `;
 
 const FinalPageWrapper = styled.div`
@@ -275,7 +294,9 @@ export default function CreateAccount() {
                   height: '48px',
                   borderRadius: '16px',
                   fontSize: '18px',
-                  backgroundColor: 'var(--Lime-Vivid, #DCFF4E)',
+                  backgroundColor: '#DCFF4E',
+                  boxShadow: "none",
+                  textAlign:"center",
                 }}
               >
                 다음
@@ -312,7 +333,6 @@ export default function CreateAccount() {
                   required
                 />
               </FormField>
-              <Separator />
 
               <FormField>
                 <InputLabel>비밀번호</InputLabel>
@@ -325,7 +345,6 @@ export default function CreateAccount() {
                   required
                 />
               </FormField>
-              <Separator />
 
               <FormField>
                 <InputLabel>비밀번호 확인</InputLabel>
@@ -338,7 +357,6 @@ export default function CreateAccount() {
                   required
                 />
               </FormField>
-              <Separator />
 
               <FormField>
                 <InputLabel>닉네임</InputLabel>
@@ -351,7 +369,6 @@ export default function CreateAccount() {
                   required
                 />
               </FormField>
-              <Separator />
 
               <FormField>
                 <InputLabel>이름</InputLabel>

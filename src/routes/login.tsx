@@ -60,19 +60,17 @@ const StyledLabel = styled.label`
   top:6px;
   font-size: 14px;
   text-align: left; 
-  color: #2D2D2D; /* Label color */
+  color: #2D2D2D; 
 `;
 
 const StyledInput = styled.input`
   width: 100%;  
-   
   padding: 32px 24px 10px 24px;
   border: none;
   border-radius: 0;
   font-size: 16px;
   outline: none;
   color: #A6A6A6;
-
   border-bottom: 1px solid #E8E8E8;
 
   &:focus {
@@ -82,6 +80,8 @@ const StyledInput = styled.input`
   &::placeholder {
     color: #aaa;
   }
+
+}
 `;
 
 const SubmitButton = styled.button`
@@ -197,7 +197,7 @@ export default function CreateAccount() {
           />
         </FormItem>
 
-        
+
         <SubmitButton type="submit" disabled={isLoading}>
           {isLoading ? "로딩중..." : "로그인"}
         </SubmitButton>
