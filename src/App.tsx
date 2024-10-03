@@ -71,10 +71,7 @@ const router = createBrowserRouter([
         path: "chatrooms",
         element: <ChatList />,
       },
-      {
-        path: "post",
-        element: <PostTweet />,
-      },
+      
     ],
   },
   {
@@ -88,6 +85,10 @@ const router = createBrowserRouter([
       {
         path: "chatrooms/:channelId",
         element: <ChatRoom />,
+      },
+      {
+        path: "post",
+        element: <PostTweet />,
       },
     ],
   },

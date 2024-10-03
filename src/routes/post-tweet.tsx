@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom";
 import { auth, db, storage, ACTIVITY_FEEDS_USER_DB_PATH, ACTIVITY_FEEDS_AGGREGATE_DB_PATH } from "../firebase";
 import { getDownloadURL, ref as storageRef, uploadBytes } from "firebase/storage";
 import { collection, addDoc, serverTimestamp, updateDoc, doc } from "firebase/firestore";
-import Button from "@mui/material/Button";
+
 
 const Wrapper = styled.div`
   display: flex;
@@ -32,7 +32,7 @@ const Form = styled.form`
 
 const TextArea = styled.textarea`
   width: 100%;
-  height: 150px;
+  height: 50vh;
   padding: 10px;
   font-size: 18px;
   resize: none;
@@ -50,6 +50,8 @@ const ButtonsContainer = styled.div`
   display: flex;
   gap: 10px;
   margin-bottom: 20px;
+  position:fixed;
+  bottom:0px;
 `;
 
 const IslandButton = styled.label`
@@ -163,42 +165,43 @@ export default function PostTweet() {
 
   return (
     <Wrapper>
-      
+
       <Form onSubmit={handleSubmit}>
         <Header>
           <img src="/icon_arrow_left.svg" alt="Post" onClick={handleGoBack} />
           <SubmitButton type="submit" className="primary">올리기</SubmitButton>
         </Header>
-        <TextArea
-          placeholder="골프에 관한건 뭐든지 공유해주세요."
-          value={tweetContent}
-          onChange={(e) => setTweetContent(e.target.value)}
-        />
+
 
         {/* Optional: Display selected media previews */}
         {selectedPhoto && (
           <img
             src={URL.createObjectURL(selectedPhoto)}
             alt="Selected"
-            style={{ width: "100px", height: "100px", borderRadius: "10px", marginBottom: "10px" }}
+            style={{ width: "100%", borderRadius: "10px", marginBottom: "10px" }}
           />
         )}
 
         {selectedVideo && (
           <video
-            width="200"
-            height="150"
+        
             controls
-            style={{ borderRadius: "10px", marginBottom: "10px" }}
+            style={{ width:"100%", borderRadius: "10px", marginBottom: "10px" }}
           >
             <source src={URL.createObjectURL(selectedVideo)} type="video/mp4" />
             Your browser does not support the video tag.
           </video>
         )}
 
+        <TextArea
+          placeholder="골프에 관한건 뭐든지 공유해주세요."
+          value={tweetContent}
+          onChange={(e) => setTweetContent(e.target.value)}
+        />
+
         <ButtonsContainer>
           <IslandButton htmlFor="photo-upload">
-            <img src="/icon_post_photo.svg" alt="Photo"/>
+            <img src="/icon_post_photo.svg" alt="Photo" />
             <HiddenInput
               id="photo-upload"
               type="file"
@@ -207,7 +210,7 @@ export default function PostTweet() {
             />
           </IslandButton>
           <IslandButton htmlFor="video-upload">
-          <img src="/icon_post_video.svg" alt="Video"/>
+            <img src="/icon_post_video.svg" alt="Video" />
             <HiddenInput
               id="video-upload"
               type="file"
@@ -216,7 +219,7 @@ export default function PostTweet() {
             />
           </IslandButton>
         </ButtonsContainer>
-        
+
       </Form>
     </Wrapper>
   );
