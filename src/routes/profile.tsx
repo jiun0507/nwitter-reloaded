@@ -35,9 +35,8 @@ const Wrapper = styled.div`
   flex-direction: column;
   gap: 0px;
   color: #ffffff;
-  background-color: #0a2e14; /* Darker green */
+  background-color: #05330D; 
   min-height: 100vh;
-  padding: 20px;
   width: 100%;
 `;
 
@@ -48,28 +47,26 @@ const BackgroundPhotoContainer = styled.div<BackgroundPhotoProps>`
   background-image: url(${props => props.bgUrl});
   background-size: cover;
   background-position: center;
-  border-radius: 10px;
-  margin-bottom: 20px;
 `;
 
 const BackButton = styled.button`
   position: absolute;
   top: 10px;
   left: 10px;
-  background: rgba(0, 0, 0, 0.5);
   border: none;
   color: #ffffff;
   font-size: 24px;
   cursor: pointer;
-  border-radius: 50%;
   width: 40px;
   height: 40px;
   display: flex;
   justify-content: center;
   align-items: center;
+  background:none;
+  filter: drop-shadow(0px 0px 1px rgba(0, 0, 0, 0.75));
 
   &:hover {
-    background: rgba(0, 0, 0, 0.7);
+    background: none;
   }
 `;
 
@@ -77,23 +74,20 @@ const CameraButton = styled.button`
   position: absolute;
   top: 10px;
   right: 10px;
-  background: rgba(0, 0, 0, 0.5);
   border: none;
+  color: #ffffff;
+  font-size: 24px;
   cursor: pointer;
-  border-radius: 50%;
   width: 40px;
   height: 40px;
   display: flex;
   justify-content: center;
   align-items: center;
+  background:none;
+  filter: drop-shadow(0px 0px 1px rgba(0, 0, 0, 0.75));
 
   &:hover {
-    background: rgba(0, 0, 0, 0.7);
-  }
-
-  img {
-    width: 20px;
-    height: 20px;
+    background: none;
   }
 `;
 
@@ -136,11 +130,11 @@ const BackgroundNavButton = styled.button<{ direction: 'left' | 'right' }>`
 
 const ProfileHeader = styled.div`
   display: flex;
+  padding:16px;
   align-items: center;
   justify-content: space-between;
   gap: 20px;
   width: 100%;
-  margin-bottom: 20px;
   color: #A2E3AD;
 `;
 
@@ -189,6 +183,7 @@ const Name = styled.span`
 const Description = styled.p`
   max-width: 600px;
   width: 100%;
+  padding:16px;
   text-align: left;
   color: #ffffff;
 `;
@@ -197,7 +192,7 @@ const Separator = styled.hr`
   width: 100%;
   max-width: 600px;
   border: none;
-  border-top: 0.5px solid #808080;
+  border-top: 1px solid #113B18;
   margin: 10px 0;
 `;
 
@@ -205,7 +200,7 @@ const GolfInfo = styled.div`
   width: 100%;
   max-width: 600px;
   border-radius: 10px;
-  margin-bottom: 20px;
+  padding:16px;
 `;
 
 const GolfInfoHeader = styled.div`
@@ -220,6 +215,9 @@ const GolfScoresHeader = styled.div`
   align-items: center;
   justify-content: space-between;
   margin-bottom: 10px;
+  padding:0 16px;
+  height:40px;
+  width:100%;
 `;
 
 const GolfInfoTitle = styled.h4`
@@ -237,7 +235,7 @@ const GolfInfoGrid = styled.div`
 const GolfInfoItem = styled.div`
   font-size: 12px;
   color: #ffffff;
-  background-color: #0f3e22;
+  background-color: #012007;
   padding: 12px;
   border-radius: 14px;
   display: flex;
@@ -276,10 +274,8 @@ const GolfScores = styled.div`
   display: flex;
   flex-wrap: nowrap;
   overflow-x: auto;
-  padding: 10px 0;
-  background-color: #0f3e22;
+  padding: 16px 0;
   border-radius: 14px;
-  gap: 20px;
 
   scrollbar-width: none;
   -ms-overflow-style: none;
@@ -291,15 +287,7 @@ const GolfScores = styled.div`
   scroll-behavior: smooth;
   max-width: 100%;
 
-  @media (max-width: 768px) {
-    padding: 8px 0;
-    gap: 15px;
-  }
 
-  @media (max-width: 480px) {
-    padding: 6px 0;
-    gap: 10px;
-  }
 `;
 
 const ScoreItem = styled.div`
@@ -307,14 +295,13 @@ const ScoreItem = styled.div`
   flex-direction: column;
   align-items: center;
   flex: 0 0 auto;
-  min-width: 60px;
-  max-width: 60px;
+  width: 20vw;
   height: 150px;
 `;
 
 const ScoreValue = styled.div`
   font-size: 14px;
-  color: #A2E3AD;
+  color: #fff;
   margin-bottom: 5px;
   white-space: nowrap;
   overflow: hidden;
@@ -323,9 +310,9 @@ const ScoreValue = styled.div`
 
 const ScoreLine = styled.div`
   position: relative;
-  width: 2px;
+  width: 1px;
   height: 100px;
-  background-color: #A2E3AD;
+  background-color: #244E2C;
   margin-bottom: 5px;
 `;
 
@@ -334,13 +321,13 @@ const Dot = styled.div`
   left: -4px;
   width: 10px;
   height: 10px;
-  background-color: #A2E3AD;
+  background-color: #fff;
   border-radius: 50%;
 `;
 
 const ScoreDate = styled.div`
   font-size: 12px;
-  color: #FFFFFF;
+  color: #A2E3AD;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -375,11 +362,12 @@ const ChatButton = styled.button`
 `;
 
 const EditButton = styled.button`
-  padding: 6px 12px;
-  background-color: #05280B;
+  padding: 0px 16px;
+  height:40px;
+  background-color: #012007;
   color: #A2E3AD;
   border: none;
-  border-radius: 5px;
+  border-radius: 20px;
   cursor: pointer;
   font-size: 12px;
 
@@ -392,7 +380,6 @@ const Tweets = styled.div`
   display: flex;
   width: 100%;
   flex-direction: column;
-  gap: 10px;
   max-width: 600px;
 `;
 
@@ -472,13 +459,13 @@ export default function Profile() {
   };
 
   const handleBackgroundPrev = () => {
-    setCurrentBackgroundIndex(prevIndex => 
+    setCurrentBackgroundIndex(prevIndex =>
       prevIndex === 0 ? backgroundPhotos.length - 1 : prevIndex - 1
     );
   };
 
   const handleBackgroundNext = () => {
-    setCurrentBackgroundIndex(prevIndex => 
+    setCurrentBackgroundIndex(prevIndex =>
       prevIndex === backgroundPhotos.length - 1 ? 0 : prevIndex + 1
     );
   };
@@ -666,15 +653,17 @@ export default function Profile() {
       {/* Background Photo Section */}
       <BackgroundPhotoContainer bgUrl={backgroundPhotos[currentBackgroundIndex]}>
         {/* Back Button */}
-        <BackButton onClick={handleBackClick} aria-label="Go Back">←</BackButton>
-        
+        <BackButton onClick={handleBackClick} aria-label="Go Back">
+          <img src="/icon_arrow_left_white.svg" />
+        </BackButton>
+
         {/* Show Camera Icon only for current user */}
         {isCurrentUser && (
           <CameraButton onClick={handleCameraClick} aria-label="Edit Background Photos">
             <img src="/camera.png" alt="Edit Background Photos" />
           </CameraButton>
         )}
-        
+
         {/* Navigation Buttons for sliding background photos */}
         {backgroundPhotos.length > 1 && (
           <>
@@ -683,7 +672,7 @@ export default function Profile() {
           </>
         )}
       </BackgroundPhotoContainer>
-      
+
       {/* Dots Container moved below the background photo and above the avatar */}
       {backgroundPhotos.length > 1 && (
         <DotsContainer>
@@ -746,7 +735,7 @@ export default function Profile() {
       {/* Golf Scores Section */}
       {profile?.golfInfo?.scores && profile.golfInfo.scores.length > 0 && (
         <>
-          <Separator />
+
           <GolfScoresHeader>
             <GolfInfoTitle>스코어 기록</GolfInfoTitle>
             {isCurrentUser && (
