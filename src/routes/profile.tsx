@@ -381,6 +381,8 @@ const Tweets = styled.div`
   width: 100%;
   flex-direction: column;
   max-width: 600px;
+  padding-bottom:80px;
+  background:#fff;
 `;
 
 const NavigationButton = styled.button<{ direction: 'left' | 'right' }>`
@@ -660,7 +662,7 @@ export default function Profile() {
         {/* Show Camera Icon only for current user */}
         {isCurrentUser && (
           <CameraButton onClick={handleCameraClick} aria-label="Edit Background Photos">
-            <img src="/camera.png" alt="Edit Background Photos" />
+            <img src="/icon_camera_white.svg" />
           </CameraButton>
         )}
 

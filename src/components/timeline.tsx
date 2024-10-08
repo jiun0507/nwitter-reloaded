@@ -35,8 +35,7 @@ const Wrapper = styled.div`
   margin-bottom:80px;
   gap: 0px;
   flex-direction: column;
-  height: 100vh;
-  overflow-y: auto;
+  overflow:hidden
 `;
 
 const LoadingMore = styled.div`

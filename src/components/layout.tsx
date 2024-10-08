@@ -26,6 +26,7 @@ const Menu = styled.div`
 const LeftMenu = styled.div`
   display: flex;
   align-items: center;
+  justify-content: center;
   background: #dcff4e;
   width:48px;
   height:48px;
@@ -38,6 +39,7 @@ const RightMenu = styled.div`
   background: #054807;
   padding: 10px 16px;
   height:50px;
+  gap:16px;
   border-radius: 14px;
 `;
 
@@ -46,14 +48,9 @@ const MenuItem = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  height: 32px; /* Adjusted to 32px as specified */
-  width: 32px; /* Adjusted to 32px as specified */
-  margin: 0 8px; /* 16px total spacing between icons */
-  flex-shrink: 0; /* Prevent shrinking */
+  flex-shrink: 0; 
   img,
   svg {
-    width: 24px; /* Reduced size to fit within 32px container */
-    height: 24px;
     width: 40px; 
     height: 40px;
     object-fit: cover;
@@ -68,9 +65,8 @@ const Profile = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  height: 32px; /* Adjusted to 32px as specified */
-  width: 32px; /* Adjusted to 32px as specified */
-  margin: 0 8px; /* 16px total spacing between icons */
+  height: 32px; 
+  width: 32px; 
   flex-shrink: 0; /* Prevent shrinking */
   img,
   svg {
@@ -117,6 +113,7 @@ export default function Layout() {
               <img src="/icon_chat_softgreen.svg" alt="Chatrooms" />
             </MenuItem>
           </Link>
+          
           <Link to="/profile">
             <Profile className="profile">
               <img src={avatarPhotoURL} alt="Profile" />
@@ -124,9 +121,10 @@ export default function Layout() {
           </Link>
           <Link to="https://open.kakao.com/o/shws3MRg">
             <MenuItem>
-              <img src="/support_agent.svg" alt="support" />
+              <img src="/icon_help_softgreen.svg" alt="support" />
             </MenuItem>  
           </Link>
+          
         </RightMenu>
       </Menu>
     </Wrapper>
