@@ -347,14 +347,14 @@ const NameContainer = styled.div`
 `;
 
 const ChatButton = styled.button`
-  padding: 10px 20px;
-  background-color: #1d9bf0;
+  padding: 0 16px;
+  height:40px;
+  background-color: #009733;
   color: white;
   border: none;
-  border-radius: 5px;
+  border-radius: 20px;
   cursor: pointer;
-  font-size: 16px;
-  align-self: flex-start;
+  font-size: 14px;
 
   &:hover {
     background-color: #0d8ae0;
