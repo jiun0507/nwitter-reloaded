@@ -61,11 +61,6 @@ const InputField = styled.input`
 `;
 
 
-const Separator = styled.hr`
-  border: none;
-  border-bottom: 1px solid #e0e0e0;
-`;
-
 const Error = styled.div`
   color: red;
   margin-top: 16px;
