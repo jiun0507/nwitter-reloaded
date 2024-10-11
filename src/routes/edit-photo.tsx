@@ -5,7 +5,6 @@ import { updateProfile } from 'firebase/auth';
 import { auth, db, storage } from '../firebase';
 import { doc, getDoc, updateDoc } from 'firebase/firestore';
 import styled from 'styled-components';
-import AddAPhotoIcon from '@mui/icons-material/AddAPhoto'; // 아이콘 추가
 import Button from "@mui/material/Button";
 import CircularProgress from '@mui/material/CircularProgress'; // 로딩 스피너 추가
 import '../style/style.css';

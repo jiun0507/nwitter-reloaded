@@ -26,6 +26,7 @@ import {
 import { deleteObject, ref as storageRef } from "firebase/storage";
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
+import '../style/style.css';
 
 // Define Styled Components
 
@@ -81,16 +82,21 @@ const Media = styled.div`
 `;
 
 const DeleteButton = styled.button`
-  background-color: tomato;
-  color: white;
-  font-weight: 600;
+  color: #FF5656;
+  display: flex;
+  align-items: center;
+  gap: 5px; /* Space between icon and text */
+  background-color: transparent;
   border: none;
-  font-size: 12px;
-  padding: 5px 10px;
-  text-transform: uppercase;
-  border-radius: 5px;
   cursor: pointer;
-  align-self: flex-start;
+  font-size: 14px;
+
+  &:hover {
+    // text-decoration: underline;
+  }
+
+  /* Remove default button styles */
+  padding: 0;
 `;
 
 const Actions = styled.div`
@@ -407,7 +413,10 @@ export default function Tweet({
         )}
       </Media>
       {user?.uid === userId && canDelete && (
-        <DeleteButton onClick={onDelete}>Delete</DeleteButton>
+        <DeleteButton  onClick={onDelete}>
+          <LikeIcon src="/icon_trash_red.svg" alt="Like" />
+          Delete
+          </DeleteButton>
       )}
       {canDelete ? (<></>) : (
         <>
@@ -421,7 +430,7 @@ export default function Tweet({
             {currentLikes}
           </LikeButton>
         <CommentButton onClick={toggleComments} aria-label="Comments">
-          <CommentIcon src="/icon_comment_deepgreen.svg" alt="Comment" />
+          <CommentIcon src="/icon_comment_deepgreen.svg" alt="Comment"/>
           {tweetComments.length}
         </CommentButton>
       </Actions>

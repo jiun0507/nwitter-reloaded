@@ -1,32 +1,24 @@
-// src/pages/PostTweet.tsx
-
 import { styled } from "styled-components";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { auth, db, storage, ACTIVITY_FEEDS_USER_DB_PATH, ACTIVITY_FEEDS_AGGREGATE_DB_PATH } from "../firebase";
 import { getDownloadURL, ref as storageRef, uploadBytes } from "firebase/storage";
 import { collection, addDoc, serverTimestamp, updateDoc, doc } from "firebase/firestore";
-
+import CircularProgress from '@mui/material/CircularProgress'; // 로딩 스피너 추가
+import Button from "@mui/material/Button";
 
 const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-`;
-
-const Header = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  align-self: stretch;
-  padding:8px 0;
+  padding: 64px 0px 80px 0px;
 `;
 
 const Form = styled.form`
   display: flex;
   flex-direction: column;
   width: 100%;
-  padding:0px 16px;
+  padding: 0px 16px;
   max-width: 600px;
 `;
 
@@ -39,10 +31,10 @@ const TextArea = styled.textarea`
   border: none;
   border-radius: 10px;
   margin-bottom: 20px;
-  caret-color: #018F05; 
+  caret-color: #018F05;
   &:focus {
     outline: none;
-    border: none; /* Focus 상태에서도 보더 없애기 */
+    border: none;
   }
 `;
 
@@ -50,29 +42,27 @@ const ButtonsContainer = styled.div`
   display: flex;
   gap: 10px;
   margin-bottom: 20px;
-  position:fixed;
-  bottom:0px;
+  position: fixed;
+  bottom: 0px;
 `;
 
-const IslandButton = styled.label`
-
-`;
+const IslandButton = styled.label``;
 
 const HiddenInput = styled.input`
   display: none;
 `;
 
-const SubmitButton = styled.button`
-
-`;
-
+const SubmitButton = styled.button``;
 
 export default function PostTweet() {
   const [tweetContent, setTweetContent] = useState<string>("");
   const [selectedPhoto, setSelectedPhoto] = useState<File | null>(null);
   const [selectedVideo, setSelectedVideo] = useState<File | null>(null);
+  const [isLoading, setIsLoading] = useState(false); // 로딩 상태 관리
+  const [isSuccess, setIsSuccess] = useState(false); // 성공 상태 관리
   const navigate = useNavigate();
   const user = auth.currentUser;
+
   const handleGoBack = () => {
     navigate(-1); // 한 단계 뒤로 가기
   };
@@ -100,8 +90,9 @@ export default function PostTweet() {
       return;
     }
 
+    setIsLoading(true); // 버튼 클릭 시 로딩 상태로 변경
+
     try {
-      // Upload photo if selected
       let photoURL: string | null = null;
       if (selectedPhoto) {
         const photoRefPath = `tweets/${user.uid}/${Date.now()}_${selectedPhoto.name}`;
@@ -110,7 +101,6 @@ export default function PostTweet() {
         photoURL = await getDownloadURL(photoRef);
       }
 
-      // Upload video if selected
       let videoURL: string | null = null;
       if (selectedVideo) {
         const videoRefPath = `tweets/${user.uid}/${Date.now()}_${selectedVideo.name}`;
@@ -119,7 +109,6 @@ export default function PostTweet() {
         videoURL = await getDownloadURL(videoRef);
       }
 
-      // Create tweet document in aggregate feed
       const aggregateTweetRef = await addDoc(collection(db, ACTIVITY_FEEDS_AGGREGATE_DB_PATH), {
         tweet: tweetContent,
         userId: user.uid,
@@ -133,9 +122,6 @@ export default function PostTweet() {
         video: videoURL,
       });
 
-      console.log("This is aggregated tweet ref id", aggregateTweetRef.id);
-
-      // Create tweet document in user-specific feed
       const userTweetRef = await addDoc(collection(db, `${ACTIVITY_FEEDS_USER_DB_PATH}/${user.uid}`), {
         tweet: tweetContent,
         userId: user.uid,
@@ -150,30 +136,47 @@ export default function PostTweet() {
         aggregateFeedDocId: aggregateTweetRef.id,
       });
 
-      // After creating both user-specific and aggregate feed documents
       await updateDoc(doc(db, ACTIVITY_FEEDS_USER_DB_PATH, user.uid, userTweetRef.id), {
         aggregateFeedDocId: aggregateTweetRef.id,
       });
 
-      alert("Tweet posted successfully!");
-      navigate("/"); // Navigate back to timeline
+      setIsSuccess(true); // 성공 시 상태 변경하여 체크 아이콘 표시
+
+      // 체크 아이콘이 표시된 후 2초 후에 alert 표시
+      setTimeout(() => {
+        alert("Tweet posted successfully!");
+        navigate(-1); // 확인 버튼 누르면 이전 페이지로 이동
+      }, 500);
+
     } catch (error) {
       console.error("Error posting tweet:", error);
       alert("There was an error posting your tweet. Please try again.");
+    } finally {
+      setIsLoading(false); // 트윗이 완료되면 로딩 중단
     }
   };
 
   return (
     <Wrapper>
-
       <Form onSubmit={handleSubmit}>
-        <Header>
-          <img src="/icon_arrow_left.svg" alt="Post" onClick={handleGoBack} />
-          <SubmitButton type="submit" className="primary">올리기</SubmitButton>
-        </Header>
+        <header className="header_white">
+          <Button
+            type="button"
+            variant="contained"
+            onClick={handleGoBack}
+            className="back_button black"
+          >
+          </Button>
 
+          {isLoading ? (
+            <CircularProgress sx={{ color: '#238F27' }} size={32} /> // 로딩 중일 때 스피너 표시
+          ) : isSuccess ? (
+            <img src="/icon_check_green.svg" width="40px" height="40px" /> // 성공 시 체크 아이콘 표시
+          ) : (
+            <SubmitButton type="submit" className="primary">올리기</SubmitButton> // 기본 상태에서는 "올리기" 버튼
+          )}
+        </header>
 
-        {/* Optional: Display selected media previews */}
         {selectedPhoto && (
           <img
             src={URL.createObjectURL(selectedPhoto)}
@@ -184,9 +187,8 @@ export default function PostTweet() {
 
         {selectedVideo && (
           <video
-        
             controls
-            style={{ width:"100%", borderRadius: "10px", marginBottom: "10px" }}
+            style={{ width: "100%", borderRadius: "10px", marginBottom: "10px" }}
           >
             <source src={URL.createObjectURL(selectedVideo)} type="video/mp4" />
             Your browser does not support the video tag.
@@ -199,27 +201,28 @@ export default function PostTweet() {
           onChange={(e) => setTweetContent(e.target.value)}
         />
 
-        <ButtonsContainer>
-          <IslandButton htmlFor="photo-upload">
-            <img src="/icon_post_photo.svg" alt="Photo" />
-            <HiddenInput
-              id="photo-upload"
-              type="file"
-              accept="image/*"
-              onChange={handlePhotoChange}
-            />
-          </IslandButton>
-          <IslandButton htmlFor="video-upload">
-            <img src="/icon_post_video.svg" alt="Video" />
-            <HiddenInput
-              id="video-upload"
-              type="file"
-              accept="video/*"
-              onChange={handleVideoChange}
-            />
-          </IslandButton>
-        </ButtonsContainer>
-
+        {!isLoading && (
+          <ButtonsContainer>
+            <IslandButton htmlFor="photo-upload">
+              <img src="/icon_post_photo.svg" alt="Photo" />
+              <HiddenInput
+                id="photo-upload"
+                type="file"
+                accept="image/*"
+                onChange={handlePhotoChange}
+              />
+            </IslandButton>
+            <IslandButton htmlFor="video-upload">
+              <img src="/icon_post_video.svg" alt="Video" />
+              <HiddenInput
+                id="video-upload"
+                type="file"
+                accept="video/*"
+                onChange={handleVideoChange}
+              />
+            </IslandButton>
+          </ButtonsContainer>
+        )}
       </Form>
     </Wrapper>
   );

@@ -17,6 +17,7 @@ import { ITweet } from "../components/timeline";
 import Tweet from "../components/tweet";
 import { useParams, useNavigate } from "react-router-dom";
 import { Button } from "@mui/material";
+import '../style/style.css';
 
 // Define the prop type for BackgroundPhotoContainer
 interface BackgroundPhotoProps {
@@ -32,6 +33,7 @@ const GlobalStyle = createGlobalStyle`
 
 const Wrapper = styled.div`
   display: flex;
+  padding: 64px 0px 80px 0px;
   align-items: flex-start;
   flex-direction: column;
   gap: 0px;
@@ -45,31 +47,12 @@ const BackgroundPhotoContainer = styled.div<BackgroundPhotoProps>`
   position: relative;
   width: 100%;
   height: 400px;
+  margin-top:-64px;
   background-image: url(${props => props.bgUrl});
   background-size: cover;
   background-position: center;
 `;
 
-const BackButton = styled.button`
-  position: absolute;
-  top: 10px;
-  left: 10px;
-  border: none;
-  color: #ffffff;
-  font-size: 24px;
-  cursor: pointer;
-  width: 40px;
-  height: 40px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background:none;
-  filter: drop-shadow(0px 0px 1px rgba(0, 0, 0, 0.75));
-
-  &:hover {
-    background: none;
-  }
-`;
 
 const CameraButton = styled.button`
   position: absolute;
@@ -177,7 +160,7 @@ const Nickname = styled.span`
 
 const Name = styled.span`
   font-size: 13px;
-  color: #3E8B4D;
+  color: #ffffff;
   font-weight: bold;
 `;
 
@@ -223,7 +206,6 @@ const GolfScoresHeader = styled.div`
 
 const GolfInfoTitle = styled.h4`
   font-size: 14px;
-  margin-top: 10px;
   color: #A2E3AD;
 `;
 
@@ -653,20 +635,30 @@ export default function Profile() {
     <Wrapper>
       <GlobalStyle />
 
-      {/* Background Photo Section */}
+     
       <BackgroundPhotoContainer bgUrl={backgroundPhotos[currentBackgroundIndex]}>
-        {/* Back Button */}
-        <BackButton onClick={handleBackClick} aria-label="Go Back">
-          <img src="/icon_arrow_left_white.svg" />
-        </BackButton>
+     
 
-        
-        {/* Show Camera Icon only for current user */}
-        {isCurrentUser && (
+
+        <header className='header_transparent'>
+          <Button
+            type="button"
+            variant="contained"
+            onClick={handleBackClick} 
+            aria-label="Go Back"
+            className="back_button"
+          >
+          </Button>
+          {isCurrentUser && (
           <CameraButton onClick={handleCameraClick} aria-label="Edit Background Photos">
             <img src="/icon_camera_white.svg" />
           </CameraButton>
         )}
+        </header>
+
+        
+        {/* Show Camera Icon only for current user */}
+        
 
         {/* Navigation Buttons for sliding background photos */}
         {backgroundPhotos.length > 1 && (

@@ -18,6 +18,7 @@ time, mark, audio, video {
     font-size: 100%;
     font: inherit;
     vertical-align: baseline;
+    box-shadow: none;
 }
 
 button.primary {
@@ -28,6 +29,7 @@ button.primary {
     border:none;
     color: #013F03;
     padding:0 16px;
+    box-shadow: none;
 }
  
 
@@ -50,7 +52,15 @@ button.back_button {
   background: url('/icon_arrow_left_white.svg') no-repeat center / 32px 32px ;
 }
 
+button.back_button.black {
+    background: url('/icon_arrow_left.svg') no-repeat center / 32px 32px ;
+}
 
+.icon.trash::before {
+    content: '';
+    background: url('/icon_trash_red.svg') no-repeat center / 32px 32px ;
+}
+  
 
 
 header.header_sub {
@@ -66,5 +76,51 @@ header.header_sub {
     align-items: center;
     align-self: stretch;
     z-index: 200;
+}
+
+header.header_transparent {
+    position: fixed;
+    top:0px;
+    left:0px;
+    right:0px;
+    height: 64px;
+    background-color:none;
+    display: flex;
+    padding: 8px 16px;
+    justify-content: space-between;
+    align-items: center;
+    align-self: stretch;
+    z-index: 200;
+}
+
+header.header_white {
+    position: fixed;
+    top:0px;
+    left:0px;
+    right:0px;
+    height: 64px;
+    background-color: #ffffff;
+    display: flex;
+    padding: 8px 16px;
+    justify-content: space-between;
+    align-items: center;
+    align-self: stretch;
+    z-index: 200;
+}
+
+
+select.LG_select {
+  width: 100%;
+  padding: 38px 24px 12px 24px; /* padding to make room for the arrow icon */
+  text-indent: 0;
+  font-size: 16px;
+  border-radius: 0px;
+  background: #ffffff;
+  appearance: none; /* 기본 select 화살표 제거 */
+  outline: none;
+  color: #333;
+  border:none;
+  border-bottom: 1px solid #E8E8E8;
+  background: url('/icon_chevron_down.svg') no-repeat right 16px bottom 8px  / 32px 32px ;
 }
 

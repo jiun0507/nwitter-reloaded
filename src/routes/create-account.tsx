@@ -8,21 +8,19 @@ import Button from "@mui/material/Button";
 import styled from 'styled-components';
 
 const Wrapper = styled.div`
-  width: 100%;
-  margin: 0 auto;
-  padding: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 64px 0px 80px 0px;
+  width:100%;
 `;
 
 const Form = styled.form`
-  margin-top: 32px;
+  
+  width:100%;
 `;
 
-const Header = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding:20px 16px 16px 16px;
-`;
+
 
 const Title = styled.h1`
   color: black;
@@ -46,15 +44,29 @@ const InputField = styled.input`
   border-radius: 0;
   font-size: 16px;
   outline: none;
-  color: #A6A6A6;
+  color: #2D2D2D;
+  font-weight:bold;
   border-bottom: 1px solid #E8E8E8;
+  transition: border-bottom-color 0.9s ease; 
 
   &:focus {
-    border-bottom: 1px solid #013F03;
+    border-bottom: 1px solid #238F27;
+    transition: border-bottom-color 0.3s ease; 
   }
 
   &::placeholder {
-    color: #aaa;
+    color: #A6A6A6;
+    font-weight:normal;
+  }
+
+    
+  &:-webkit-autofill {
+    background-color: #ffffff !important;
+  }
+
+ 
+  &:-moz-autofill {
+    background-color: #ffffff !important;
   }
 
 }
@@ -83,29 +95,30 @@ const FormField = styled.div`
 
 const FinalPageWrapper = styled.div`
   display: flex;
+  padding:32px;
   flex-direction: column;
   align-items: center;
   text-align: center;
-  padding: 32px;
 `;
 
 const Logo = styled.img`
-  width: 150px;
+  width: 120px;
   margin-bottom: 16px;
-  margin-top: 200px;
+  margin-top: 80px;
 `;
 
 const WelcomeText = styled.h2`
   font-size: 20px;
   color: #013F03;
   margin-bottom: 16px;
-  weight: 600;
+  font-weight:bold;
 `;
 
 const SubtitleText = styled.p`
   font-size: 16px;
   color: #013F03;
   line-height: 25.6px;
+  font-weight:bold;
 `;
 
 export default function CreateAccount() {
@@ -266,6 +279,7 @@ export default function CreateAccount() {
             className="primary"
             style={{
               width:'100%',
+              margin:'32px 0',
             }}
           >
             시작하기
@@ -273,7 +287,7 @@ export default function CreateAccount() {
         </FinalPageWrapper>
       ) : (
         <Form onSubmit={onSubmit}>
-          <Header>
+          <header className="header_white">
             <Title>{step === 1 ? "회원가입" : "골퍼 정보"}</Title>
             {step === 1 ? (
               <Button
@@ -294,7 +308,7 @@ export default function CreateAccount() {
                 {isLoading ? "로딩 중..." : "다음"}
               </Button>
             )}
-          </Header>
+          </header>
 
           {step === 1 && (
             <>
@@ -433,23 +447,19 @@ export default function CreateAccount() {
                 <select
                   name="holeInOneExperience"
                   onChange={onChange}
+                  className="LG_select"
                   value={
                     holeInOneExperience === null
                       ? ""
                       : holeInOneExperience.toString()
                   }
-                  style={{
-                    fontSize: '16px',
-                    color: '#A6A6A6',
-                    width: '100%',
-                    border: 'none',
-                    padding: '8px 0',
-                  }}
                 >
                   <option value="">홀인원을 경험한 적이 있나요?</option>
                   <option value="true">예</option>
                   <option value="false">아니오</option>
                 </select>
+
+
               </FormField>
               {/* <Button
                 type="button"
