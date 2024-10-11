@@ -39,10 +39,7 @@ const router = createBrowserRouter([
         path: "profile",
         element: <Profile />,
       },
-      {
-        path: "edit-background-photos",
-        element: <EditBackgroundPhotos />,
-      },
+
       {
         path: "manage-golf-scores",
         element: <ManageGolfScores />,
@@ -59,6 +56,10 @@ const router = createBrowserRouter([
       </ProtectedRoute>
     ),
     children: [
+      {
+        path: "edit-background-photos",
+        element: <EditBackgroundPhotos />,
+      },
       {
         path: "edit-profile",
         element: <EditProfile />,
@@ -151,9 +152,7 @@ const ContentWrapper = styled.div`
   flex-direction: column;
   align-items: center;
   width: 100%;
-  max-width: 600px;
   margin: 0 auto;
-  padding: 20px;
 
   @media (max-width: 768px) {
     padding: 0px;

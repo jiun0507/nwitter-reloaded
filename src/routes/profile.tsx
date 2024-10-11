@@ -32,7 +32,7 @@ const GlobalStyle = createGlobalStyle`
 
 const Wrapper = styled.div`
   display: flex;
-  padding: 0px 0px 80px 0px;
+  padding: 0px ;
   align-items: flex-start;
   flex-direction: column;
   gap: 0px;
@@ -63,11 +63,10 @@ const CameraButton = styled.button`
   display: flex;
   justify-content: center;
   align-items: center;
-  background:none;
-  filter: drop-shadow(0px 0px 1px rgba(0, 0, 0, 0.75));
+  background: url('/icon_camera_white_stroke.png') no-repeat center / 32px 32px ;
 
   &:hover {
-    background: none;
+    
   }
 `;
 
@@ -82,20 +81,20 @@ const BackButton = styled.button`
   display: flex;
   justify-content: center;
   align-items: center;
-  background:none;
-  filter: drop-shadow(0px 0px 1px rgba(0, 0, 0, 0.75));
-
+  background: url('/icon_arrow_left_white_stroke.png') no-repeat center / 32px 32px ;
+  
   &:hover {
-    background: none;
+   
   }
 `;
 
 const DotsContainer = styled.div`
   display: flex;
+  padding: 16px 24px 0px 24px;
   justify-content: center;
   align-items: center;
-  gap: 8px;
-  margin-bottom: 20px;
+  gap: 20px;
+  align-self: stretch;
 `;
 
 const BackgroundDot = styled.div<{ isActive: boolean }>`
@@ -109,20 +108,17 @@ const BackgroundDot = styled.div<{ isActive: boolean }>`
 const BackgroundNavButton = styled.button<{ direction: 'left' | 'right' }>`
   position: absolute;
   top: 50%;
-  ${(props) => (props.direction === 'left' ? 'left: 10px;' : 'right: 10px;')}
+  ${(props) => (props.direction === 'left' ? 'left: -10px;' : 'right: 5px;')}
   transform: translateY(-50%);
-  background-color: rgba(0, 0, 0, 0.5);
+  background:none;
   border: none;
   border-radius: 50%;
-  width: 30px;
-  height: 30px;
+  width: 40px;
+  height: 40px;
   color: #ffffff;
   cursor: pointer;
   z-index: 10;
 
-  &:hover {
-    background-color: rgba(0, 0, 0, 0.7);
-  }
 
   pointer-events: auto;
 `;
@@ -180,7 +176,7 @@ const Name = styled.span`
 `;
 
 const Description = styled.p`
-  max-width: 600px;
+  
   width: 100%;
   padding:16px;
   text-align: left;
@@ -189,7 +185,7 @@ const Description = styled.p`
 
 const Separator = styled.hr`
   width: 100%;
-  max-width: 600px;
+  
   border: none;
   border-top: 1px solid #113B18;
   margin: 10px 0;
@@ -197,7 +193,7 @@ const Separator = styled.hr`
 
 const GolfInfo = styled.div`
   width: 100%;
-  max-width: 600px;
+  
   border-radius: 10px;
   padding:16px;
 `;
@@ -378,7 +374,7 @@ const Tweets = styled.div`
   display: flex;
   width: 100%;
   flex-direction: column;
-  max-width: 600px;
+  
   padding-bottom:80px;
   background:#fff;
 `;
@@ -649,29 +645,33 @@ export default function Profile() {
   return (
     <Wrapper>
       <GlobalStyle />
-     
+
       <BackgroundPhotoContainer bgUrl={backgroundPhotos[currentBackgroundIndex]}>
-     
+
         <header className='header_transparent relative'>
           <BackButton onClick={handleBackClick} aria-label="Go Back">
-            <img src="/icon_arrow_left_white.svg" />
+            
           </BackButton>
           {isCurrentUser && (
-          <CameraButton onClick={handleCameraClick} aria-label="Edit Background Photos">
-            <img src="/icon_camera_white.svg" />
-          </CameraButton>
-        )}
+            <CameraButton onClick={handleCameraClick} aria-label="Edit Background Photos">
+              <img src="/icon_camera_white_stroke.svg" />
+            </CameraButton>
+          )}
         </header>
 
-        
+
         {/* Show Camera Icon only for current user */}
-        
+
 
         {/* Navigation Buttons for sliding background photos */}
         {backgroundPhotos.length > 1 && (
           <>
-            <BackgroundNavButton direction="left" onClick={handleBackgroundPrev} aria-label="Previous Background Photo">◀</BackgroundNavButton>
-            <BackgroundNavButton direction="right" onClick={handleBackgroundNext} aria-label="Next Background Photo">▶</BackgroundNavButton>
+            <BackgroundNavButton direction="left" onClick={handleBackgroundPrev} aria-label="Previous Background Photo">
+              <img src="/icon_arrow_slide_left_white.png" width="40px" height="40px"/>
+            </BackgroundNavButton>
+            <BackgroundNavButton direction="right" onClick={handleBackgroundNext} aria-label="Next Background Photo">
+              <img src="/icon_arrow_slide_right_white.png" width="40px" height="40px"/>
+            </BackgroundNavButton>
           </>
         )}
       </BackgroundPhotoContainer>
@@ -679,7 +679,7 @@ export default function Profile() {
       {/* Dots Container moved below the background photo and above the avatar */}
       {backgroundPhotos.length > 1 && (
         <DotsContainer>
-          {backgroundPhotos.slice(0, 5).map((_, index) => (
+          {backgroundPhotos.slice(0, 6).map((_, index) => (
             <BackgroundDot
               key={index}
               isActive={index === currentBackgroundIndex}

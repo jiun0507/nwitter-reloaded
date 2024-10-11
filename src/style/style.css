@@ -56,10 +56,21 @@ button.back_button.black {
     background: url('/icon_arrow_left.svg') no-repeat center / 32px 32px ;
 }
 
-.icon.trash::before {
-    content: '';
-    background: url('/icon_trash_red.svg') no-repeat center / 32px 32px ;
-}
+button.add_button {
+    border: none;
+    cursor: pointer;
+    width: 40px;
+    height: 40px;
+    min-width: 40px;
+    padding:0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: none;
+    background: url('/icon_plus_lime.svg') no-repeat center / 40px 40px ;
+  }
+  
+
   
 
 

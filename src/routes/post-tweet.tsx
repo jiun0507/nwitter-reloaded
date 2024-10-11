@@ -19,12 +19,11 @@ const Form = styled.form`
   flex-direction: column;
   width: 100%;
   padding: 0px 16px;
-  max-width: 600px;
 `;
 
 const TextArea = styled.textarea`
   width: 100%;
-  height: 50vh;
+  height: 40vh;
   padding: 10px;
   font-size: 18px;
   resize: none;
@@ -162,7 +161,6 @@ export default function PostTweet() {
         <header className="header_white">
           <Button
             type="button"
-            variant="contained"
             onClick={handleGoBack}
             className="back_button black"
           >

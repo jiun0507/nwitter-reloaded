@@ -75,7 +75,6 @@ const Media = styled.div`
   img,
   video {
     width: 100%;
-    max-width: 500px;
     border-radius: 15px;
     object-fit: cover;
   }

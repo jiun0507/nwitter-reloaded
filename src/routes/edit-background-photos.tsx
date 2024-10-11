@@ -1,11 +1,11 @@
-// src/pages/BackgroundPhotoEdit.tsx
-
 import { styled, createGlobalStyle } from "styled-components";
 import { auth, db, storage } from "../firebase";
 import { useEffect, useState, ChangeEvent, useRef } from "react";
 import { doc, getDoc, updateDoc } from "firebase/firestore";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { useNavigate } from "react-router-dom";
+import Button from '@mui/material/Button';
+import '../style/style.css';
 
 // Global Style for box-sizing
 const GlobalStyle = createGlobalStyle`
@@ -17,60 +17,28 @@ const GlobalStyle = createGlobalStyle`
 const EditWrapper = styled.div`
   display: flex;
   flex-direction: column;
-  align-items: center;
-  padding: 20px;
-  color: #ffffff;
-  background-color: #0a2e14; /* Darker green */
+  padding: 64px 0px 80px 0px ;
+  background-color: #05330D; 
+  color: #ffffff; 
   min-height: 100vh;
-  width: 100%;
 `;
 
 const HeaderRow = styled.div`
   width: 100%;
+  padding:0 16px;
   display: flex;
   align-items: center;
   justify-content: space-between;
   margin-bottom: 20px;
 `;
 
-const BackButton = styled.button`
-  background: rgba(0, 0, 0, 0.5);
-  border: none;
-  color: #ffffff;
-  font-size: 24px;
-  cursor: pointer;
-  border-radius: 50%;
-  width: 40px;
-  height: 40px;
-  
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  
-  &:hover {
-    background: rgba(0, 0, 0, 0.7);
-  }
-`;
-
 const Title = styled.h2`
   margin: 0;
   font-size: 20px;
-  color: #A2E3AD;
+  color: #ffffff;
 `;
 
-const AddPhotoButton = styled.label`
-  background: none;
-  border: none;
-  color: #A2E3AD;
-  font-size: 24px;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  
-  &:hover {
-    color: #FFFFFF;
-  }
-`;
+
 
 // Hidden file input
 const HiddenFileInput = styled.input`
@@ -79,29 +47,19 @@ const HiddenFileInput = styled.input`
 
 const PhotoGrid = styled.div`
   display: grid;
-  grid-template-columns: repeat(3, 115px);
-  gap: 15px;
+  grid-template-columns: repeat(3, calc(33.3vw - 16px));
+  gap: 8px;
   width: 100%;
-  max-width: 600px;
-  justify-content: center;
-
-  @media (max-width: 500px) {
-    grid-template-columns: repeat(2, 115px);
-  }
-
-  @media (max-width: 350px) {
-    grid-template-columns: repeat(1, 115px);
-  }
+  padding:16px;
+  justify-content: start;
 `;
-
 
 const PhotoCard = styled.div`
   position: relative;
-  width: 115px;
-  height: 115px;
-  background-color: #1a2d23;
+  background-color: none;
   border-radius: 10px;
   overflow: hidden;
+  height:calc(33.3vw - 16px);
   
   &:hover img {
     opacity: 0.8;
@@ -119,7 +77,7 @@ const RemoveButton = styled.button`
   position: absolute;
   top: 5px;
   right: 5px;
-  background: rgba(217, 76, 76, 0.8); /* Semi-transparent red */
+  background:none;
   border: none;
   color: #ffffff;
   border-radius: 50%;
@@ -131,31 +89,43 @@ const RemoveButton = styled.button`
   display: flex;
   justify-content: center;
   align-items: center;
-  
-  &:hover {
-    background: rgba(217, 76, 76, 1);
-  }
 `;
 
-
-const Message = styled.p<{ type: 'success' | 'error' | 'info' }>`
+const Message = styled.p<{ type: 'success' | 'error' | 'info'; visible: boolean }>`
   color: ${(props) =>
-    props.type === 'success' ? '#4CAF50' :
-    props.type === 'error' ? '#F44336' :
-    '#2196F3'};
+    props.type === 'success' ? '#ffffff' :
+    props.type === 'error' ? '#ffffff' :
+    '#ffffff'};
   font-size: 14px;
-`;
 
+  display: flex;
+  height: 48px;
+  line-height: 48px;
+  padding: 0px 24px;
+  justify-content: center;
+  align-items: center;
+  bottom: 24px;
+  background: #000000;
+  border-radius: 16px;
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translate(-50%, -20px);
+  white-space: nowrap;
+
+  /* 애니메이션 추가 */
+  opacity: ${(props) => (props.visible ? 1 : 0)};
+  transition: opacity 0.5s ease-in-out;
+`;
 const EditBackgroundPhotos: React.FC = () => {
   const navigate = useNavigate();
   const currentUser = auth.currentUser;
   const [backgroundPhotos, setBackgroundPhotos] = useState<string[]>([]);
   const [uploading, setUploading] = useState<boolean>(false);
-  const [message, setMessage] = useState<{ text: string, type: 'success' | 'error' | 'info' } | null>(null);
+  const [message, setMessage] = useState<{ text: string, type: 'success' | 'error' | 'info', visible: boolean } | null>(null);
 
   useEffect(() => {
     if (!currentUser) {
-      // Redirect to login if not authenticated
       navigate("/login");
       return;
     }
@@ -168,21 +138,31 @@ const EditBackgroundPhotos: React.FC = () => {
       const userDocRef = doc(db, "users", currentUser!.uid);
       const userDoc = await getDoc(userDocRef);
       if (userDoc.exists()) {
-        const userData = userDoc.data() as any; // Replace with proper typing if available
+        const userData = userDoc.data() as any;
         setBackgroundPhotos(userData.backgroundPhotoUrlList || []);
       }
     } catch (error) {
       console.error("Error fetching background photos:", error);
-      setMessage({ text: "Failed to fetch background photos.", type: "error" });
+      setMessageWithTimeout({ text: "Failed to fetch background photos.", type: "error" });
     }
   };
 
+  const setMessageWithTimeout = (msg: { text: string, type: 'success' | 'error' | 'info' }) => {
+    setMessage({ ...msg, visible: true });
+    setTimeout(() => {
+      setMessage((prev) => prev ? { ...prev, visible: false } : null);
+      // 메시지가 사라진 후, 500ms 후에 완전히 제거
+      setTimeout(() => {
+        setMessage(null);
+      }, 500); // 애니메이션 시간과 동일하게 설정
+    }, 3000); // 3초 동안 표시
+  };
+
   const handleBackClick = () => {
-    navigate("/profile"); // Adjust the path if necessary
+    navigate("/profile");
   };
 
   const handleAddPhotoClick = () => {
-    // Trigger the hidden file input
     fileInputRef.current?.click();
   };
 
@@ -191,14 +171,13 @@ const EditBackgroundPhotos: React.FC = () => {
   const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
-      // Optionally, validate file type and size here
       uploadPhoto(file);
     }
   };
 
   const uploadPhoto = async (file: File) => {
-    if (backgroundPhotos.length >= 5) {
-      setMessage({ text: "You can only have a maximum of 5 background photos.", type: "error" });
+    if (backgroundPhotos.length >= 6) {
+      setMessageWithTimeout({ text: "You can upload up to 6 Photos.", type: "error" });
       return;
     }
 
@@ -206,30 +185,25 @@ const EditBackgroundPhotos: React.FC = () => {
     setMessage(null);
 
     try {
-      // Create a unique file name
       const timestamp = Date.now();
       const fileName = `background_photos/${currentUser!.uid}/${timestamp}_${file.name}`;
       const storageRef = ref(storage, fileName);
 
-      // Upload the file
       await uploadBytes(storageRef, file);
 
-      // Get the download URL
       const downloadURL = await getDownloadURL(storageRef);
 
-      // Update Firestore
       const userDocRef = doc(db, "users", currentUser!.uid);
       const updatedPhotos = [...backgroundPhotos, downloadURL];
       await updateDoc(userDocRef, {
         backgroundPhotoUrlList: updatedPhotos,
       });
 
-      // Update state
       setBackgroundPhotos(updatedPhotos);
-      setMessage({ text: "Photo uploaded successfully!", type: "success" });
+      setMessageWithTimeout({ text: "Photo uploaded successfully!", type: "success" });
     } catch (error) {
       console.error("Error uploading photo:", error);
-      setMessage({ text: "Failed to upload photo.", type: "error" });
+      setMessageWithTimeout({ text: "Failed to upload photo.", type: "error" });
     } finally {
       setUploading(false);
     }
@@ -245,42 +219,36 @@ const EditBackgroundPhotos: React.FC = () => {
     setMessage(null);
 
     try {
-      // Optionally, delete the file from Firebase Storage
-      // Extract the storage path from the URL
       const storagePath = getStoragePathFromURL(photoUrl);
       if (storagePath) {
         const fileRef = ref(storage, storagePath);
         await deleteFile(fileRef);
       }
 
-      // Update Firestore
       const userDocRef = doc(db, "users", currentUser!.uid);
       await updateDoc(userDocRef, {
         backgroundPhotoUrlList: updatedPhotos,
       });
 
-      setMessage({ text: "Photo removed successfully!", type: "success" });
+      setMessageWithTimeout({ text: "Photo removed successfully!", type: "success" });
     } catch (error) {
       console.error("Error removing photo:", error);
-      setMessage({ text: "Failed to remove photo.", type: "error" });
+      setMessageWithTimeout({ text: "Failed to remove photo.", type: "error" });
     }
   };
 
-  // Utility function to extract storage path from download URL
   const getStoragePathFromURL = (url: string): string | null => {
     try {
       const decodedUrl = decodeURIComponent(url);
       const storagePathStart = decodedUrl.indexOf('/o/') + 3;
       const storagePathEnd = decodedUrl.indexOf('?');
-      const storagePath = decodedUrl.substring(storagePathStart, storagePathEnd);
-      return storagePath;
+      return decodedUrl.substring(storagePathStart, storagePathEnd);
     } catch (error) {
       console.error("Error extracting storage path from URL:", error);
       return null;
     }
   };
 
-  // Utility function to delete a file from Firebase Storage
   const deleteFile = async (fileRef: any) => {
     try {
       await import("firebase/storage").then(({ deleteObject }) => {
@@ -288,17 +256,26 @@ const EditBackgroundPhotos: React.FC = () => {
       });
     } catch (error) {
       console.error("Error deleting file from storage:", error);
-      // Optionally, handle the error (e.g., inform the user)
     }
   };
 
   return (
     <EditWrapper>
       <GlobalStyle />
+
+      <header className='header_sub'>
+        <Button
+          type="button"
+          variant="contained"
+          onClick={handleBackClick}
+          className="back_button"
+        >
+        </Button>
+      </header>
+
       <HeaderRow>
-        <BackButton onClick={handleBackClick} aria-label="Go Back">←</BackButton>
         <Title>스윙 갤러리</Title>
-        <AddPhotoButton onClick={handleAddPhotoClick} aria-label="Add Photo">+</AddPhotoButton>
+        <Button className="add_button" onClick={handleAddPhotoClick} aria-label="Add Photo" />
         <HiddenFileInput
           type="file"
           accept="image/*"
@@ -306,19 +283,24 @@ const EditBackgroundPhotos: React.FC = () => {
           onChange={handleFileChange}
         />
       </HeaderRow>
-      
-      {message && <Message type={message.type}>{message.text}</Message>}
-      
+
       <PhotoGrid>
         {backgroundPhotos.map((photoUrl, index) => (
           <PhotoCard key={index}>
             <PhotoImg src={photoUrl} alt={`Background ${index + 1}`} />
-            <RemoveButton onClick={() => handleRemovePhoto(index)} aria-label={`Remove photo ${index + 1}`}>−</RemoveButton>
+            <RemoveButton onClick={() => handleRemovePhoto(index)} aria-label={`Remove photo ${index + 1}`}>
+              <img src="/icon_minus_lime_stroke.svg" />
+            </RemoveButton>
           </PhotoCard>
         ))}
       </PhotoGrid>
 
-      {uploading && <Message type="info">Uploading photo...</Message>}
+      {uploading && (
+        <Message type="info" visible={true}>
+          <img src="/icon_flag_lime.svg" />&nbsp; Uploading photo...
+        </Message>
+      )}
+      {message && <Message type={message.type} visible={message.visible}><img src="/icon_flag_lime.svg" />&nbsp;{message.text}</Message>}
     </EditWrapper>
   );
 };
