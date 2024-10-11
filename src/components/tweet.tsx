@@ -60,7 +60,7 @@ const Photo = styled.img`
 const Username = styled.span`
   font-weight: 600;
   font-size: 14px;
-  color: #28a745; /* Changed to green */
+  color: #013F03; 
 `;
 
 const Payload = styled.p`
