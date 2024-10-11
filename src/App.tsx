@@ -40,10 +40,6 @@ const router = createBrowserRouter([
         element: <Profile />,
       },
       {
-        path: "edit-profile",
-        element: <EditProfile />,
-      },
-      {
         path: "edit-nickname",
         element: <EditNickname />,
       },
@@ -58,10 +54,6 @@ const router = createBrowserRouter([
       {
         path: "edit-description",
         element: <EditDescription />,
-      },
-      {
-        path: "edit-golf-info",
-        element: <EditGolfInfo />,
       },
       {
         path: "manage-golf-scores",
@@ -83,6 +75,14 @@ const router = createBrowserRouter([
     ),
     children: [
       {
+        path: "edit-profile",
+        element: <EditProfile />,
+      },
+      {
+        path: "edit-golf-info",
+        element: <EditGolfInfo />,
+      },
+      {
         path: "chatrooms/:channelId",
         element: <ChatRoom />,
       },
@@ -96,6 +96,7 @@ const router = createBrowserRouter([
     path: "profile/:userId",
     element: <Profile />,
   },
+  
   {
     path: "/login",
     element: <Login />,

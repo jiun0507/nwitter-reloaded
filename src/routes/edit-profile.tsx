@@ -10,19 +10,26 @@ const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 20px;
-  padding: 20px;
+  gap: 8px;
+  padding: 16px;
   min-height: 100vh;
-  background-color: #0d1e12; /* Dark green background */
-  color: #ffffff; /* White text */
+  background-color: #05330D;
+  color: #ffffff; 
+`;
+
+const Section = styled.div`
+  display: flex;
+  width:100%;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px 0;
 `;
 
 const BackButtonContainer = styled.div`
   width: 100%;
   display: flex;
   align-items: center;
-  padding: 10px 20px;
-  background-color: #213829;
+  padding: 10px 0px;
 `;
 
 const BackButton = styled.button`
@@ -30,34 +37,31 @@ const BackButton = styled.button`
   border: none;
   color: #ffffff;
   font-size: 18px;
+  padding:0;
   display: flex;
   align-items: center;
   cursor: pointer;
   transition: color 0.2s;
   
-  &:hover {
-    color: #9ccd8d; /* Light green on hover */
-  }
+
 `;
 
-const BackArrowIcon = styled.span`
-  font-size: 24px;
-  margin-right: 8px;
-`;
+
 
 const SectionTitle = styled.h2`
   font-size: 18px;
-  color: #9ccd8d; /* Light green color for section titles */
-  margin-bottom: 10px;
+  color: #9ccd8d; 
   width: 100%;
-  padding-left: 20px; /* Indentation for title */
+  height:40px;
 `;
 
 const ProfileButton = styled.button`
-  background-color: #213829;
+  
+  background: url('/icon_chevron_right_softgreen.svg') no-repeat right 8px center / 24px 24px #012007;
   border: none;
-  padding: 15px 20px;
-  margin: 8px 0;
+  height:64px;
+  padding: 0px 16px;
+  margin-top: 8px;
   width: 100%;
   font-size: 16px;
   color: #ffffff;
@@ -69,31 +73,32 @@ const ProfileButton = styled.button`
   transition: background-color 0.2s;
 
   &:hover {
-    background-color: #1a2d23; /* Darker green on hover */
+    background-color: #022708; /* Darker green on hover */
   }
 `;
 
 const LogoutButton = styled.button`
-  background-color: #a82020; /* Red color for logout */
+  background: url('/icon_chevron_right_red.svg') no-repeat right 8px center / 24px 24px #012007;
   border: none;
-  padding: 15px 20px;
-  margin: 8px 0;
+  height:64px;
+  padding: 0px 16px;
+  margin-top: 8px;
   width: 100%;
   font-size: 16px;
-  color: #ffffff;
+  color: #FF5656;
   border-radius: 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   cursor: pointer;
   transition: background-color 0.2s;
 
   &:hover {
-    background-color: #8c1b1b; /* Darker red on hover */
+    background-color: #022708; /* Darker green on hover */
   }
 `;
 
-const ArrowIcon = styled.span`
-  font-size: 20px;
-  color: #ffffff; /* White arrow color */
-`;
+
 
 export default function EditProfile() {
   const currentUser = auth.currentUser;
@@ -139,30 +144,33 @@ export default function EditProfile() {
     <Wrapper>
       <BackButtonContainer>
         <BackButton onClick={() => navigate("/profile")}>
-          <BackArrowIcon>←</BackArrowIcon>
-          프로필로 돌아가기
+          <img src="/icon_arrow_left_white.svg" />
         </BackButton>
       </BackButtonContainer>
-      <SectionTitle>프로필</SectionTitle>
-      <ProfileButton onClick={() => handleNavigation("/edit-nickname")}>
-        닉네임
-        <ArrowIcon>›</ArrowIcon>
-      </ProfileButton>
-      <ProfileButton onClick={() => handleNavigation("/edit-photo")}>
-        프로필 사진
-        <ArrowIcon>›</ArrowIcon>
-      </ProfileButton>
-      <ProfileButton onClick={() => handleNavigation("/edit-description")}>
-        자기소개
-        <ArrowIcon>›</ArrowIcon>
-      </ProfileButton>
+      <Section>
+        <SectionTitle>프로필</SectionTitle>
+        <ProfileButton onClick={() => handleNavigation("/edit-nickname")}>
+          닉네임
+        </ProfileButton>
+        <ProfileButton onClick={() => handleNavigation("/edit-photo")}>
+          프로필 사진  
+        </ProfileButton>
+        <ProfileButton onClick={() => handleNavigation("/edit-description")}>
+          자기소개
+        </ProfileButton>
+      </Section>
 
-      <SectionTitle>계정</SectionTitle>
-      {/* 비밀번호 button not implemented */}
+      <Section>
+        <SectionTitle>계정</SectionTitle>
+        {/* 비밀번호 button not implemented */}
 
-      <LogoutButton onClick={handleLogout}>
-        로그아웃
-      </LogoutButton>
+        <LogoutButton onClick={handleLogout}>
+          로그아웃
+        </LogoutButton>
+      </Section>
+
+
+
     </Wrapper>
   );
 }
