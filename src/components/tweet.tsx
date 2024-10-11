@@ -114,9 +114,10 @@ const ActionButton = styled.button`
   gap: 5px; /* Space between icon and text */
   background-color: transparent;
   border: none;
-  color: #28a745; /* Green text */
+  color: #013F03;
   cursor: pointer;
-  font-size: 14px;
+  font-size: 18px;
+  font-weight: bold;
 
   &:hover {
     text-decoration: underline;
@@ -127,12 +128,11 @@ const ActionButton = styled.button`
 `;
 
 const LikeButton = styled(ActionButton)<{ liked: boolean }>`
-  color: ${({ liked }) => (liked ? "#1d9bf0" : "#28a745")}; /* Blue if liked, green if not */
-  font-weight: ${({ liked }) => (liked ? "bold" : "normal")};
+
 `;
 
 const CommentButton = styled(ActionButton)`
-  /* Additional styles if needed */
+  
 `;
 
 // Optional: Styled Components for Icons to avoid inline styles
@@ -169,15 +169,14 @@ const Comment = styled.div`
   display: flex;
   align-items: flex-start;
   gap: 10px;
-  margin-bottom: 10px;
-  background-color: #f9f9f9; /* Light gray background for readability */
-  padding: 10px;
+  background-color: none;
+  padding: 8px 4px;
   border-radius: 10px;
 `;
 
 const CommentPhoto = styled.img`
-  width: 30px;
-  height: 30px;
+  width: 24px;
+  height: 24px;
   border-radius: 50%;
   object-fit: cover;
 `;
@@ -196,7 +195,7 @@ const CommentHeader = styled.div`
 const CommentUsername = styled.span`
   font-weight: 600;
   font-size: 14px;
-  color: #1d9bf0; /* Blue or your preferred color */
+  color: #013F03;
 `;
 
 const CommentText = styled.p`
@@ -228,15 +227,17 @@ const CommentInput = styled.textarea`
 
 const SubmitButton = styled.button`
   align-self: flex-end;
-  padding: 5px 10px;
-  background-color: #1d9bf0;
-  color: white;
+  padding: 0 10px;
+  height:32px;
+  margin-top:8px;
+  background-color: #DCFF4E;
+  color: #013F03;
   border: none;
-  border-radius: 5px;
+  border-radius: 8px;
   cursor: pointer;
 
   &:disabled {
-    background-color: #a0cfff;
+    opacity:0.5;
     cursor: not-allowed;
   }
 `;
