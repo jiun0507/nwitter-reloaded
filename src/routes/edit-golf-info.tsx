@@ -5,72 +5,64 @@ import { useNavigate } from 'react-router-dom';
 import { auth, db } from '../firebase';
 import { doc, getDoc, updateDoc } from 'firebase/firestore';
 import styled from 'styled-components';
+import Button from "@mui/material/Button";
+import '../style/style.css';
 
 const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
-  padding: 20px;
-  background-color: #0d1e12; /* Dark green background */
-  color: #ffffff; /* White text */
+  padding: 64px 0px 80px 0px ;
+  background-color: #05330D; 
+  color: #ffffff; 
   min-height: 100vh;
 `;
 
-const BackButton = styled.button`
-  background: none;
-  border: none;
-  color: #9ccd8d; /* Light green color for back arrow */
-  font-size: 20px;
-  cursor: pointer;
-`;
 
-const SectionTitle = styled.h2`
-  font-size: 18px;
-  color: #9ccd8d; /* Light green color */
-  margin-bottom: 10px;
-`;
 
 const InputField = styled.div`
-  margin-bottom: 15px;
+  margin-top:16px;
   display: flex;
+  position:relative;
   flex-direction: column;
+  justify-content: space-between;
+  align-items: flex-start;
+  align-self: stretch;
+  width:100%;
 `;
 
+
 const Label = styled.label`
+  position:absolute;
+  left:24px;
+  top:6px;
   font-size: 14px;
-  color: #9ccd8d;
-  margin-bottom: 5px;
+  text-align: left; 
+  color: #A2E3AD; 
 `;
 
 const Input = styled.input`
-  padding: 10px;
-  border: 1px solid #4a4a4a;
-  border-radius: 5px;
-  background-color: #213829; /* Darker green for input */
-  color: #ffffff;
+  width: 100%;  
+  padding: 32px 24px 10px 24px;
+  border: none;
+  border-radius: 0;
   font-size: 16px;
+  outline: none;
+  color: #fff;
+  border-bottom: 1px solid #113B18;
+  background:none;
 
   &:focus {
-    outline: none;
-    border-color: #9ccd8d; /* Light green border on focus */
+    border-bottom: 1px solid #DCFF4E;
   }
+
+  &::placeholder {
+    color: #366D3F;
+  }
+
+}
 `;
 
-const SaveButton = styled.button`
-  background-color: #a5d337; /* Light lime color */
-  color: #0d1e12; /* Dark text */
-  padding: 12px 20px;
-  border: none;
-  border-radius: 8px;
-  font-size: 16px;
-  font-weight: bold;
-  cursor: pointer;
-  align-self: flex-end;
-  margin-top: 20px;
 
-  &:hover {
-    background-color: #94c32b; /* Darker lime on hover */
-  }
-`;
 
 const EditGolfInfo = () => {
   const currentUser = auth.currentUser;
@@ -137,8 +129,27 @@ const EditGolfInfo = () => {
 
   return (
     <Wrapper>
-      <BackButton onClick={() => navigate(-1)}>←</BackButton>
-      <SectionTitle>골프 정보 수정</SectionTitle>
+      <header className='header_sub'>
+        <Button
+          type="button"
+          variant="contained"
+          onClick={() => navigate(-1)}
+          className="back_button"
+        >
+        </Button>
+      
+        <Button
+          type="button"
+          variant="contained"
+          onClick={handleSave}
+          className="primary"
+        >
+          저장
+        </Button>
+      </header>
+
+
+      
       <InputField>
         <Label htmlFor="bestScore">베스트 스코어</Label>
         <Input
@@ -216,7 +227,7 @@ const EditGolfInfo = () => {
           placeholder="홀인원 횟수를 입력하세요"
         />
       </InputField>
-      <SaveButton onClick={handleSave}>저장</SaveButton>
+      
     </Wrapper>
   );
 };

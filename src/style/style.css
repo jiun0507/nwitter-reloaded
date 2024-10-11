@@ -26,7 +26,6 @@ button.primary {
     font-Size: 18px;
     background-color: #DCFF4E;
     border:none;
-    margin-top: 16px;
     color: #013F03;
     padding:0 16px;
 }
@@ -36,4 +35,35 @@ button,button:hover, button:active, button:focus {
     box-shadow: none;
 
 } 
+
+button.back_button {
+  border: none;
+  cursor: pointer;
+  width: 32px;
+  height: 32px;
+  min-width: 32px;
+  padding:0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-shadow: none;
+  background: url('/icon_arrow_left_white.svg') no-repeat center / 32px 32px ;
+
+}
+
+
+header.header_sub {
+    position: fixed;
+    top:0px;
+    left:0px;
+    right:0px;
+    height: 64px;
+    background-color: #05330D;
+    display: flex;
+    padding: 8px 16px;
+    justify-content: space-between;
+    align-items: center;
+    align-self: stretch;
+    z-index: 200;
+}
 

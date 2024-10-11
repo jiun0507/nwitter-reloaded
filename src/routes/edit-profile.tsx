@@ -4,17 +4,16 @@ import { auth, db } from "../firebase";
 import { signOut } from "firebase/auth";
 import { doc, getDoc } from "firebase/firestore";
 import { useNavigate } from "react-router-dom";
+import Button from "@mui/material/Button";
 
 // Styled Components
 const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
-  align-items: center;
-  gap: 8px;
-  padding: 16px;
-  min-height: 100vh;
-  background-color: #05330D;
+  padding: 64px 16px 80px 16px ;
+  background-color: #05330D; 
   color: #ffffff; 
+  min-height: 100vh;
 `;
 
 const Section = styled.div`
@@ -25,34 +24,18 @@ const Section = styled.div`
   padding: 20px 0;
 `;
 
-const BackButtonContainer = styled.div`
-  width: 100%;
-  display: flex;
-  align-items: center;
-  padding: 10px 0px;
-`;
-
-const BackButton = styled.button`
-  background: none;
-  border: none;
-  color: #ffffff;
-  font-size: 18px;
-  padding:0;
-  display: flex;
-  align-items: center;
-  cursor: pointer;
-  transition: color 0.2s;
-  
-
-`;
 
 
 
 const SectionTitle = styled.h2`
-  font-size: 18px;
+  font-size: 14px;
   color: #9ccd8d; 
   width: 100%;
   height:40px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  align-self: stretch;
 `;
 
 const ProfileButton = styled.button`
@@ -142,11 +125,20 @@ export default function EditProfile() {
 
   return (
     <Wrapper>
-      <BackButtonContainer>
-        <BackButton onClick={() => navigate("/profile")}>
-          <img src="/icon_arrow_left_white.svg" />
-        </BackButton>
-      </BackButtonContainer>
+
+
+      <header className='header_sub'>
+        <Button
+          type="button"
+          variant="contained"
+          onClick={() => navigate("/profile")}
+          className="back_button"
+        >
+        </Button>
+      
+       
+      </header>
+
       <Section>
         <SectionTitle>프로필</SectionTitle>
         <ProfileButton onClick={() => handleNavigation("/edit-nickname")}>

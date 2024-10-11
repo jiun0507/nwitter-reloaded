@@ -16,6 +16,7 @@ import {
 import { ITweet } from "../components/timeline";
 import Tweet from "../components/tweet";
 import { useParams, useNavigate } from "react-router-dom";
+import { Button } from "@mui/material";
 
 // Define the prop type for BackgroundPhotoContainer
 interface BackgroundPhotoProps {
@@ -659,6 +660,7 @@ export default function Profile() {
           <img src="/icon_arrow_left_white.svg" />
         </BackButton>
 
+        
         {/* Show Camera Icon only for current user */}
         {isCurrentUser && (
           <CameraButton onClick={handleCameraClick} aria-label="Edit Background Photos">
