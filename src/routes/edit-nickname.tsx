@@ -4,62 +4,62 @@ import { updateProfile } from 'firebase/auth';
 import { auth, db } from '../firebase';
 import { doc, getDoc, updateDoc } from 'firebase/firestore';
 import styled from 'styled-components';
+import Button from '@mui/material/Button';
+import '../style/style.css';
 
 // Styled Components
 const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
-  align-items: center;
-  gap: 20px;
-  padding: 20px;
+  padding: 64px 0px 80px 0px ;
+  background-color: #05330D; 
+  color: #ffffff; 
   min-height: 100vh;
-  background-color: #0d1e12;
-  color: #ffffff;
+`;
+
+
+const Label = styled.label`
+  position:absolute;
+  left:24px;
+  top:6px;
+  font-size: 14px;
+  text-align: left; 
+  color: #A2E3AD; 
 `;
 
 const Input = styled.input`
-  padding: 10px;
-  width: 100%;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  font-size: 16px;
-`;
-
-const Button = styled.button`
-  padding: 10px;
-  background-color: #1d9bf0;
-  color: white;
+  width: 100%;  
+  padding: 38px 24px 10px 24px;
   border: none;
-  border-radius: 5px;
-  cursor: pointer;
+  border-radius: 0;
   font-size: 16px;
-  &:hover {
-    background-color: #0d8ae0;
+  outline: none;
+  color: #fff;
+  border-bottom: 1px solid #113B18;
+  background:none;
+
+  &:focus {
+    border-bottom: 1px solid #DCFF4E;
   }
+
+  &::placeholder {
+    color: #366D3F;
+  }
+
+}
 `;
 
-const BackButton = styled.button`
-  background-color: #213829;
-  border: none;
-  padding: 10px 15px;
-  color: #ffffff;
-  border-radius: 5px;
-  cursor: pointer;
-  font-size: 16px;
+const InputField = styled.div`
+  margin-top:16px;
   display: flex;
-  align-items: center;
-  margin-bottom: 20px;
-  transition: background-color 0.2s;
-
-  &:hover {
-    background-color: #1a2d23;
-  }
+  position:relative;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: flex-start;
+  align-self: stretch;
+  width:100%;
 `;
 
-const ArrowIcon = styled.span`
-  font-size: 20px;
-  margin-right: 8px;
-`;
 
 const EditNickname = () => {
   const [nickname, setNickname] = useState<string>('');
@@ -106,20 +106,29 @@ const EditNickname = () => {
 
   return (
     <Wrapper>
-      <BackButton onClick={() => navigate('/edit-profile')}>
-        <ArrowIcon>←</ArrowIcon>
-        프로필로 돌아가기
-      </BackButton>
-      <h2>닉네임 변경</h2>
       <form onSubmit={handleSubmit}>
-        <Input
-          type="text"
-          value={nickname}
-          onChange={(e) => setNickname(e.target.value)}
-          placeholder="새 닉네임을 입력하세요"
-          required
-        />
-        <Button type="submit">저장</Button>
+        <header className='header_sub'>
+          <Button
+            type="button"
+            variant="contained"
+            onClick={() => navigate('/edit-profile')}
+            className="back_button"
+          >
+          </Button>
+          <Button type="submit" className="primary">저장</Button>
+        </header>
+        <InputField>
+          <Label>닉네임</Label>
+          <Input
+            type="text"
+            value={nickname}
+            onChange={(e) => setNickname(e.target.value)}
+            placeholder="새 닉네임을 입력하세요"
+            required
+          />
+        </InputField>
+
+
       </form>
     </Wrapper>
   );

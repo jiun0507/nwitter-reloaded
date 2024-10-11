@@ -42,7 +42,7 @@ const Label = styled.label`
 
 const Input = styled.input`
   width: 100%;  
-  padding: 32px 24px 10px 24px;
+  padding: 38px 24px 10px 24px;
   border: none;
   border-radius: 0;
   font-size: 16px;
@@ -147,8 +147,6 @@ const EditGolfInfo = () => {
           저장
         </Button>
       </header>
-
-
       
       <InputField>
         <Label htmlFor="bestScore">베스트 스코어</Label>

@@ -40,20 +40,8 @@ const router = createBrowserRouter([
         element: <Profile />,
       },
       {
-        path: "edit-nickname",
-        element: <EditNickname />,
-      },
-      {
-        path: "edit-photo",
-        element: <EditPhoto />,
-      },
-      {
         path: "edit-background-photos",
         element: <EditBackgroundPhotos />,
-      },
-      {
-        path: "edit-description",
-        element: <EditDescription />,
       },
       {
         path: "manage-golf-scores",
@@ -77,6 +65,18 @@ const router = createBrowserRouter([
       {
         path: "edit-profile",
         element: <EditProfile />,
+      },
+      {
+        path: "edit-nickname",
+        element: <EditNickname />,
+      },
+      {
+        path: "edit-photo",
+        element: <EditPhoto />,
+      },
+      {
+        path: "edit-description",
+        element: <EditDescription />,
       },
       {
         path: "edit-golf-info",
