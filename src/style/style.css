@@ -124,3 +124,6 @@ select.LG_select {
   background: url('/icon_chevron_down.svg') no-repeat right 16px bottom 8px  / 32px 32px ;
 }
 
+.str-chat {border:none; background-color: #013F03;}
+
+.relative { position: relative !important;}

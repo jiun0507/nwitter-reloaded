@@ -10,11 +10,13 @@ import styled from 'styled-components';
 const PreviewContainer = styled.div`
   display: flex;
   align-items: center;
-  padding: 10px;
+  padding: 0 16px;
+  margin-top:16px;
   cursor: pointer;
-  
+  background:none;
+  border:none;
   &:hover {
-    background-color: #f5f5f5;
+    background: none;
   }
 `;
 

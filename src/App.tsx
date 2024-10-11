@@ -47,10 +47,7 @@ const router = createBrowserRouter([
         path: "manage-golf-scores",
         element: <ManageGolfScores />,
       },
-      {
-        path: "chatrooms",
-        element: <ChatList />,
-      },
+     
       
     ],
   },
@@ -89,6 +86,10 @@ const router = createBrowserRouter([
       {
         path: "post",
         element: <PostTweet />,
+      },
+      {
+        path: "chatrooms",
+        element: <ChatList />,
       },
     ],
   },

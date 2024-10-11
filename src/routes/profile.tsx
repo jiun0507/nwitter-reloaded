@@ -16,7 +16,6 @@ import {
 import { ITweet } from "../components/timeline";
 import Tweet from "../components/tweet";
 import { useParams, useNavigate } from "react-router-dom";
-import { Button } from "@mui/material";
 import '../style/style.css';
 
 // Define the prop type for BackgroundPhotoContainer
@@ -33,7 +32,7 @@ const GlobalStyle = createGlobalStyle`
 
 const Wrapper = styled.div`
   display: flex;
-  padding: 64px 0px 80px 0px;
+  padding: 0px 0px 80px 0px;
   align-items: flex-start;
   flex-direction: column;
   gap: 0px;
@@ -47,7 +46,6 @@ const BackgroundPhotoContainer = styled.div<BackgroundPhotoProps>`
   position: relative;
   width: 100%;
   height: 400px;
-  margin-top:-64px;
   background-image: url(${props => props.bgUrl});
   background-size: cover;
   background-position: center;
@@ -55,9 +53,26 @@ const BackgroundPhotoContainer = styled.div<BackgroundPhotoProps>`
 
 
 const CameraButton = styled.button`
-  position: absolute;
-  top: 10px;
-  right: 10px;
+
+  border: none;
+  color: #ffffff;
+  font-size: 24px;
+  cursor: pointer;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background:none;
+  filter: drop-shadow(0px 0px 1px rgba(0, 0, 0, 0.75));
+
+  &:hover {
+    background: none;
+  }
+`;
+
+const BackButton = styled.button`
+
   border: none;
   color: #ffffff;
   font-size: 24px;
@@ -634,21 +649,13 @@ export default function Profile() {
   return (
     <Wrapper>
       <GlobalStyle />
-
      
       <BackgroundPhotoContainer bgUrl={backgroundPhotos[currentBackgroundIndex]}>
      
-
-
-        <header className='header_transparent'>
-          <Button
-            type="button"
-            variant="contained"
-            onClick={handleBackClick} 
-            aria-label="Go Back"
-            className="back_button"
-          >
-          </Button>
+        <header className='header_transparent relative'>
+          <BackButton onClick={handleBackClick} aria-label="Go Back">
+            <img src="/icon_arrow_left_white.svg" />
+          </BackButton>
           {isCurrentUser && (
           <CameraButton onClick={handleCameraClick} aria-label="Edit Background Photos">
             <img src="/icon_camera_white.svg" />

@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { styled } from 'styled-components';
 import { auth } from '../firebase';
 import { Auth } from 'firebase/auth';
+import { useNavigate } from "react-router-dom";
 import { getFunctions, httpsCallable } from 'firebase/functions';
 import { StreamChat, ChannelFilters, ChannelOptions, ChannelSort } from 'stream-chat';
 import {
@@ -14,15 +15,22 @@ import CustomChannelPreview from "../components/custom-channel-list-preview";
 
 import 'stream-chat-react/dist/css/v2/index.css';
 
+import Button from '@mui/material/Button';
+import '../style/style.css';
+
 const Wrapper = styled.div`
-  display: flex;
-  height: 100vh;
+    display: flex;
+    flex-direction: column;
+    padding: 64px 0px 80px 0px ;
+    color: #ffffff; 
+    min-height: 100vh;
 `;
 
 const ChannelListContainer = styled.div`
   width: 100%;
-  border-right: 1px solid #ccc;
+  padding: 0;
 `;
+
 
 const ErrorMessage = styled.div`
   color: red;
@@ -55,6 +63,7 @@ export default function ChatList() {
   const [client, setClient] = useState<StreamChat<DefaultStreamChatGenerics> | null>(null);
   const [error, setError] = useState<string | null>(null);
   const user = auth.currentUser;
+  const navigate = useNavigate(); // useNavigate 훅 추가
 
   useEffect(() => {
     let chatClient: StreamChat<DefaultStreamChatGenerics> | null = null;
@@ -108,29 +117,17 @@ export default function ChatList() {
     return <LoadingIndicator />;
   }
 
-  // // Custom ChannelPreview component
-  // const CustomChannelPreview: React.FC<ChannelPreviewUIComponentProps<DefaultStreamChatGenerics>> = ({
-  //   channel,
-  //   latestMessage,
-  // }) => {
-  //   console.log(channel);
-  //   const handleClick = () => {
-  //     navigate(`/chatrooms/${channel.id}`);
-  //   };
-
-  //   return (
-  //     <div
-  //       onClick={handleClick}
-  //       style={{ cursor: 'pointer', padding: '10px', borderBottom: '1px solid #eee' }}
-  //     >
-  //       <div style={{ fontWeight: 'bold' }}>{channel.data?.name || 'Unnamed Channel'}</div>
-  //       <div style={{ fontSize: '12px', color: '#999' }}>{latestMessage}</div>
-  //     </div>
-  //   );
-  // };
-
   return (
     <Wrapper>
+      <header className='header_white'>
+        <Button
+          type="button"
+          className="back_button black"
+          onClick={() => navigate(-1)} // 뒤로 가기 버튼 클릭 시 뒤로 이동
+        >
+        </Button>
+
+      </header>
       <Chat client={client}>
         <ChannelListContainer>
           <ChannelList
@@ -144,3 +141,25 @@ export default function ChatList() {
     </Wrapper>
   );
 }
+
+// // Custom ChannelPreview component
+// const CustomChannelPreview: React.FC<ChannelPreviewUIComponentProps<DefaultStreamChatGenerics>> = ({
+//   channel,
+//   latestMessage,
+// }) => {
+//   console.log(channel);
+//   const handleClick = () => {
+//     navigate(`/chatrooms/${channel.id}`);
+//   };
+
+//   return (
+//     <div
+//       onClick={handleClick}
+//       style={{ cursor: 'pointer', padding: '10px', borderBottom: '1px solid #eee' }}
+//     >
+//       <div style={{ fontWeight: 'bold' }}>{channel.data?.name || 'Unnamed Channel'}</div>
+//       <div style={{ fontSize: '12px', color: '#999' }}>{latestMessage}</div>
+//     </div>
+//   );
+// };
+

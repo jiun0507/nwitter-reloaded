@@ -17,7 +17,10 @@ import { auth } from '../firebase';
 import { Auth } from 'firebase/auth';
 import { getFunctions, httpsCallable } from 'firebase/functions';
 
+
 import 'stream-chat-react/dist/css/v2/index.css';
+
+import '../style/style.css';
 
 const ChatContainer = styled.div`
   height: 100vh;
