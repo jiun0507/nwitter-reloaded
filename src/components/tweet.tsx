@@ -320,11 +320,14 @@ export default function Tweet({
       if (photo) {
         const photoRef = storageRef(storage, `${ACTIVITY_FEEDS_USER_DB_PATH}/${user.uid}/${id}/photo`);
         await deleteObject(photoRef);
+        
       }
       if (video) {
         const videoRef = storageRef(storage, `${ACTIVITY_FEEDS_USER_DB_PATH}/${user.uid}/${id}/video`);
         await deleteObject(videoRef);
       }
+      // Refresh the page after deletion
+      window.location.reload();
     } catch (e) {
       console.error("Error deleting tweet:", e);
     }
