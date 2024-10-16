@@ -733,18 +733,16 @@ export default function Profile() {
       )}
 
       {/* Chat Button for non-current users */}
-
-
+      {/* Golf Scores Header Section */}
+      <GolfScoresHeader>
+        <GolfInfoTitle>스코어 기록</GolfInfoTitle>
+        {isCurrentUser && (
+          <EditButton onClick={handleAddScoreClick}>기록</EditButton>
+        )}
+      </GolfScoresHeader>
       {/* Golf Scores Section */}
       {profile?.golfInfo?.scores && profile.golfInfo.scores.length > 0 && (
         <>
-
-          <GolfScoresHeader>
-            <GolfInfoTitle>스코어 기록</GolfInfoTitle>
-            {isCurrentUser && (
-              <EditButton onClick={handleAddScoreClick}>기록</EditButton>
-            )}
-          </GolfScoresHeader>
           <GolfScoresContainer>
             <NavigationButton direction="left" onClick={handleScrollLeft} aria-label="Scroll Left">
               ◀
