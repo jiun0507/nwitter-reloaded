@@ -115,6 +115,11 @@ const GlobalStyles = createGlobalStyle`
     box-sizing: border-box;
   }
   body {
+    display: flex;
+    padding-bottom: 16px;
+    flex-direction: column;
+    align-items: center;
+    align-self: stretch;
     background-color: white;
     color: white;
     font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
@@ -140,7 +145,7 @@ const GlobalStyles = createGlobalStyle`
 `;
 
 const AppWrapper = styled.div`
-  max-width: 100%;
+  max-width:468px;
   min-height: 100vh;
   display: flex;
   flex-direction: column;

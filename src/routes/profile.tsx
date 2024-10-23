@@ -32,7 +32,7 @@ const GlobalStyle = createGlobalStyle`
 
 const Wrapper = styled.div`
   display: flex;
-  padding: 0px ;
+  padding: 40px 0 0 0 0 ;
   align-items: flex-start;
   flex-direction: column;
   gap: 0px;

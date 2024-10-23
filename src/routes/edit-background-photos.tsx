@@ -47,7 +47,7 @@ const HiddenFileInput = styled.input`
 
 const PhotoGrid = styled.div`
   display: grid;
-  grid-template-columns: repeat(3, calc(33.3vw - 16px));
+  grid-template-columns: repeat(3, calc(100% / 3 - 6px));
   gap: 8px;
   width: 100%;
   padding:16px;
@@ -59,7 +59,7 @@ const PhotoCard = styled.div`
   background-color: none;
   border-radius: 10px;
   overflow: hidden;
-  height:calc(33.3vw - 16px);
+  width: 100%;
   
   &:hover img {
     opacity: 0.8;

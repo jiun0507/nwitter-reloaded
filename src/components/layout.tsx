@@ -1,7 +1,7 @@
 import { Link, Outlet, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { auth } from "../firebase";
-import '../style/style.css'; 
+import '../style/style.css';
 
 const Wrapper = styled.div`
   position: relative;
@@ -11,33 +11,41 @@ const Wrapper = styled.div`
 
 const Menu = styled.div`
   position: fixed;
-  bottom: 16px;
-  left: 0;
-  right: 0;
+  top: 0px;
+  max-width:468px;
+  width:100%;
   padding: 16px;
   display: flex;
   justify-content: space-between;
-  padding: 0 16px; /* 16px padding on both sides */
-  z-index: 1000; /* Ensures the menu is above other content */
+  background:#ffffff;
+  padding: 0 16px; 
+  z-index: 1000; 
   align-items: center;
   align-self: stretch;
 `;
+
+const Logo = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  img,
+  svg {
+    height: 16px;
+    object-fit: cover; 
+  }
+`;
+
 
 const LeftMenu = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  background: #dcff4e;
-  width:48px;
-  height:48px;
-  border-radius: 14px;
+  gap:24px;
 `;
 
 const RightMenu = styled.div`
   display: flex;
   align-items: center;
-  background: #054807;
-  padding: 10px 16px;
   height:50px;
   gap:16px;
   border-radius: 14px;
@@ -49,15 +57,17 @@ const MenuItem = styled.div`
   align-items: center;
   justify-content: center;
   flex-shrink: 0; 
+  padding:0;
+  height:32px;
+  width:32px;
   img,
   svg {
-    width: 40px; 
-    height: 40px;
-    object-fit: cover;
-    
+    width: 32px; 
+    height: 32px;
   }
-  &.log-out svg {
-    fill: #fff; /* Set the logout icon color to white */
+  &.post {
+    background: #dcff4e;
+    border-radius: 8px;
   }
 `;
 const Profile = styled.div`
@@ -75,9 +85,7 @@ const Profile = styled.div`
     object-fit: cover;
     border-radius: ${(props) => (props.className === "profile" ? "50%" : "0")}; /* Circular for profile */
   }
-  &.log-out svg {
-    fill: #fff; /* Set the logout icon color to white */
-  }
+  
 `;
 
 export default function Layout() {
@@ -96,7 +104,10 @@ export default function Layout() {
       <Menu>
         {/* Left Menu with Posting Button */}
         <LeftMenu>
-          <MenuItem onClick={onPostTweet}>
+          <Logo>
+            <img src="/birdie_logo_typo.svg" alt="Home" />
+          </Logo>
+          <MenuItem onClick={onPostTweet} className="post">
             <img src="/icon_plus_deepgreen.svg" alt="Post" />
           </MenuItem>
         </LeftMenu>
@@ -105,26 +116,26 @@ export default function Layout() {
         <RightMenu>
           <Link to="/">
             <MenuItem>
-              <img src="/icon_home_softgreen.svg" alt="Home" />
+              <img src="/icon_home_black.svg" alt="Home" />
             </MenuItem>
           </Link>
           <Link to="/chatrooms">
             <MenuItem>
-              <img src="/icon_chat_softgreen.svg" alt="Chatrooms" />
+              <img src="/icon_chat_black.svg" alt="Chatrooms" />
             </MenuItem>
           </Link>
-          
+
           <Link to="/profile">
             <Profile className="profile">
               <img src={avatarPhotoURL} alt="Profile" />
-            </Profile>  
+            </Profile>
           </Link>
-          <Link to="https://open.kakao.com/o/shws3MRg">
+          {/* <Link to="https://open.kakao.com/o/shws3MRg">
             <MenuItem>
               <img src="/icon_help_softgreen.svg" alt="support" />
-            </MenuItem>  
-          </Link>
-          
+            </MenuItem>
+          </Link> */}
+
         </RightMenu>
       </Menu>
     </Wrapper>
