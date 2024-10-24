@@ -6,15 +6,14 @@ import '../style/style.css';
 const Wrapper = styled.div`
   position: relative;
   height: 100%;
-  width: 100%;
+  width:100vw;
+  
 `;
 
 const Menu = styled.div`
   position: fixed;
   top: 0px;
-  max-width:468px;
-  width:100%;
-  padding: 16px;
+  width:100vw;
   display: flex;
   justify-content: space-between;
   background:#ffffff;

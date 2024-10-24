@@ -11,6 +11,7 @@ const Wrapper = styled.div`
   background-color: #0d1e12;
   color: #ffffff;
   min-height: 100vh;
+  width:100%;
 `;
 
 const ErrorMessage = styled.div`

@@ -40,10 +40,7 @@ const router = createBrowserRouter([
         element: <Profile />,
       },
 
-      {
-        path: "manage-golf-scores",
-        element: <ManageGolfScores />,
-      },
+
      
       
     ],
@@ -71,6 +68,10 @@ const router = createBrowserRouter([
       {
         path: "edit-photo",
         element: <EditPhoto />,
+      },
+      {
+        path: "manage-golf-scores",
+        element: <ManageGolfScores />,
       },
       {
         path: "edit-description",
@@ -125,13 +126,10 @@ const GlobalStyles = createGlobalStyle`
     font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
     line-height: 1.5;
     font-size: 16px;
+    color:#2D2D2D;
   }
   
-  @media (max-width: 768px) {
-    body {
-      font-size: 14px;
-    }
-  }
+
 
   a {
     color: inherit;
@@ -145,23 +143,22 @@ const GlobalStyles = createGlobalStyle`
 `;
 
 const AppWrapper = styled.div`
-  max-width:468px;
+
   min-height: 100vh;
   display: flex;
   flex-direction: column;
+  width:100vw;
 `;
 
 const ContentWrapper = styled.div`
-  flex: 1;
+
   display: flex;
   flex-direction: column;
   align-items: center;
-  width: 100%;
+  width:100vw;
   margin: 0 auto;
 
-  @media (max-width: 768px) {
-    padding: 0px;
-  }
+
 `;
 
 function App() {

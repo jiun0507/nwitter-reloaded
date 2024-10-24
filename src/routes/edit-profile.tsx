@@ -14,6 +14,7 @@ const Wrapper = styled.div`
   background-color: #05330D; 
   color: #ffffff; 
   min-height: 100vh;
+  width:100%;
 `;
 
 const Section = styled.div`

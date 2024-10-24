@@ -32,14 +32,13 @@ const GlobalStyle = createGlobalStyle`
 
 const Wrapper = styled.div`
   display: flex;
-  padding: 40px 0 0 0 0 ;
+  padding: 40px 0 0 0 ;
   align-items: flex-start;
   flex-direction: column;
   gap: 0px;
-  color: #ffffff;
-  background-color: #05330D; 
+  background-color: #ffffff; 
   min-height: 100vh;
-  width: 100%;
+ 
 `;
 
 const BackgroundPhotoContainer = styled.div<BackgroundPhotoProps>`
@@ -49,43 +48,6 @@ const BackgroundPhotoContainer = styled.div<BackgroundPhotoProps>`
   background-image: url(${props => props.bgUrl});
   background-size: cover;
   background-position: center;
-`;
-
-
-const CameraButton = styled.button`
-
-  border: none;
-  color: #ffffff;
-  font-size: 24px;
-  cursor: pointer;
-  width: 40px;
-  height: 40px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background: url('/icon_camera_white_stroke.png') no-repeat center / 32px 32px ;
-
-  &:hover {
-    
-  }
-`;
-
-const BackButton = styled.button`
-
-  border: none;
-  color: #ffffff;
-  font-size: 24px;
-  cursor: pointer;
-  width: 40px;
-  height: 40px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background: url('/icon_arrow_left_white_stroke.png') no-repeat center / 32px 32px ;
-  
-  &:hover {
-   
-  }
 `;
 
 const DotsContainer = styled.div`
@@ -100,7 +62,7 @@ const DotsContainer = styled.div`
 const BackgroundDot = styled.div<{ isActive: boolean }>`
   width: 10px;
   height: 10px;
-  background-color: ${props => (props.isActive ? "#FFFFFF" : "#3E8B4D")};
+  background-color: ${props => (props.isActive ? "#D7D7D7" : "#2D2D2D")};
   border-radius: 50%;
   cursor: pointer;
 `;
@@ -165,14 +127,14 @@ const AvatarInput = styled.input`
 
 const Nickname = styled.span`
   font-size: 14px;
-  color: #FFFFFF;
+  color: #3E8B4D;
   font-weight: bold;
 `;
 
 const Name = styled.span`
   font-size: 13px;
-  color: #ffffff;
   font-weight: bold;
+  color:#2D2D2D;
 `;
 
 const Description = styled.p`
@@ -180,14 +142,13 @@ const Description = styled.p`
   width: 100%;
   padding:16px;
   text-align: left;
-  color: #ffffff;
 `;
 
 const Separator = styled.hr`
   width: 100%;
   
   border: none;
-  border-top: 1px solid #113B18;
+  border-top: 1px solid #F2F2F2;
   margin: 10px 0;
 `;
 
@@ -217,7 +178,7 @@ const GolfScoresHeader = styled.div`
 
 const GolfInfoTitle = styled.h4`
   font-size: 14px;
-  color: #A2E3AD;
+  // color: #A2E3AD;
 `;
 
 const GolfInfoGrid = styled.div`
@@ -229,7 +190,7 @@ const GolfInfoGrid = styled.div`
 const GolfInfoItem = styled.div`
   font-size: 12px;
   color: #ffffff;
-  background-color: #012007;
+  background-color: #F8F8F8;
   padding: 12px;
   border-radius: 14px;
   display: flex;
@@ -249,79 +210,73 @@ const GolfInfoItem = styled.div`
 `;
 
 const GolfInfoItemLabel = styled.div`
-  color: #357040;
+  color: #6C6C6C;
   font-size: 12px;
 `;
 
 const GolfInfoItemContent = styled.div`
-  color: #A2E3AD;
+  color: #2D2D2D;
   font-size: 16px;
+  font-weight:bold;
 `;
 
 const GolfScoresContainer = styled.div`
   position: relative;
   width: 100%;
-  overflow: hidden;
+  overflow-x: auto; /* 가로 스크롤 허용 */
+  white-space: nowrap; /* 요소들이 한 줄에 나란히 배치되도록 설정 */
+  padding: 0;
+  scroll-behavior: smooth;
+  scrollbar-width: thin; /* 스크롤바를 작게 */
 `;
 
 const GolfScores = styled.div`
   display: flex;
   flex-wrap: nowrap;
-  overflow-x: auto;
-  padding: 16px 0;
+  overflow-x: auto; /* 가로 스크롤 허용 */
+  padding: 16px;
   border-radius: 14px;
-
-  scrollbar-width: none;
-  -ms-overflow-style: none;
-
-  &::-webkit-scrollbar {
-    display: none;
-  }
-
+  scrollbar-width: thin; /* 스크롤바를 작게 */
   scroll-behavior: smooth;
   max-width: 100%;
-
-
+  white-space: nowrap; /* 가로로 계속 이어지게 */
 `;
 
 const ScoreItem = styled.div`
-  display: flex;
+  display: inline-flex;
   flex-direction: column;
+  justify-content: flex-end;
   align-items: center;
-  flex: 0 0 auto;
-  width: 20vw;
   height: 150px;
+  margin:0px 20px 0px 0px;
 `;
+
 
 const ScoreValue = styled.div`
-  font-size: 14px;
+  border-radius: 12px;
+  font-size:12px;
+  background: #000;
   color: #fff;
   margin-bottom: 5px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  display: flex;
+  width: 34px;
+  height:22px;
+  justify-content: center;
+  align-items: center;
 `;
 
-const ScoreLine = styled.div`
-  position: relative;
-  width: 1px;
-  height: 100px;
-  background-color: #244E2C;
-  margin-bottom: 5px;
-`;
 
 const Dot = styled.div`
-  position: absolute;
-  left: -4px;
-  width: 10px;
-  height: 10px;
-  background-color: #fff;
-  border-radius: 50%;
+  min-height:5px;
+  width: 14px;
+  border-radius: 5px 5px 0px 0px;
+  background: linear-gradient(180deg, #DCFF4E 0%, #F1FFA4 100%);
 `;
 
 const ScoreDate = styled.div`
   font-size: 12px;
-  color: #A2E3AD;
+  color: ##6C6C6C;
+  margin-top:8px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -338,6 +293,12 @@ const NameContainer = styled.div`
     align-items: flex-start;
     gap: 4px;
   }
+`;
+
+const ButtonContainer = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 10px;
 `;
 
 const ChatButton = styled.button`
@@ -358,10 +319,10 @@ const ChatButton = styled.button`
 const EditButton = styled.button`
   padding: 0px 16px;
   height:40px;
-  background-color: #012007;
-  color: #A2E3AD;
+  background-color: #DCFF4E;
+  color: #013F03;
   border: none;
-  border-radius: 20px;
+  border-radius: 12px;
   cursor: pointer;
   font-size: 12px;
 
@@ -379,26 +340,26 @@ const Tweets = styled.div`
   background:#fff;
 `;
 
-const NavigationButton = styled.button<{ direction: 'left' | 'right' }>`
-  position: absolute;
-  top: 50%;
-  ${(props) => (props.direction === 'left' ? 'left: 10px;' : 'right: 10px;')}
-  transform: translateY(-50%);
-  background-color: rgba(0, 0, 0, 0.5);
-  border: none;
-  border-radius: 50%;
-  width: 30px;
-  height: 30px;
-  color: #ffffff;
-  cursor: pointer;
-  z-index: 10;
+// const NavigationButton = styled.button<{ direction: 'left' | 'right' }>`
+//   position: absolute;
+//   top: 50%;
+//   ${(props) => (props.direction === 'left' ? 'left: 10px;' : 'right: 10px;')}
+//   transform: translateY(-50%);
+//   background-color: rgba(0, 0, 0, 0.5);
+//   border: none;
+//   border-radius: 50%;
+//   width: 30px;
+//   height: 30px;
+//   color: #ffffff;
+//   cursor: pointer;
+//   z-index: 10;
 
-  &:hover {
-    background-color: rgba(0, 0, 0, 0.7);
-  }
+//   &:hover {
+//     background-color: rgba(0, 0, 0, 0.7);
+//   }
 
-  pointer-events: auto;
-`;
+//   pointer-events: auto;
+// `;
 
 interface GolfScore {
   date: string;
@@ -442,9 +403,7 @@ export default function Profile() {
   const [backgroundPhotos, setBackgroundPhotos] = useState<string[]>([]);
   const [currentBackgroundIndex, setCurrentBackgroundIndex] = useState<number>(0);
 
-  const handleBackClick = () => {
-    navigate("/");
-  };
+
 
   const handleCameraClick = () => {
     navigate("/edit-background-photos");
@@ -648,16 +607,7 @@ export default function Profile() {
 
       <BackgroundPhotoContainer bgUrl={backgroundPhotos[currentBackgroundIndex]}>
 
-        <header className='header_transparent relative'>
-          <BackButton onClick={handleBackClick} aria-label="Go Back">
-            
-          </BackButton>
-          {isCurrentUser && (
-            <CameraButton onClick={handleCameraClick} aria-label="Edit Background Photos">
-              <img src="/icon_camera_white_stroke.svg" />
-            </CameraButton>
-          )}
-        </header>
+
 
 
         {/* Show Camera Icon only for current user */}
@@ -667,10 +617,10 @@ export default function Profile() {
         {backgroundPhotos.length > 1 && (
           <>
             <BackgroundNavButton direction="left" onClick={handleBackgroundPrev} aria-label="Previous Background Photo">
-              <img src="/icon_arrow_slide_left_white.png" width="40px" height="40px"/>
+              <img src="/icon_arrow_slide_left_white.png" width="40px" height="40px" />
             </BackgroundNavButton>
             <BackgroundNavButton direction="right" onClick={handleBackgroundNext} aria-label="Next Background Photo">
-              <img src="/icon_arrow_slide_right_white.png" width="40px" height="40px"/>
+              <img src="/icon_arrow_slide_right_white.png" width="40px" height="40px" />
             </BackgroundNavButton>
           </>
         )}
@@ -720,11 +670,15 @@ export default function Profile() {
             <Name>{profile?.golfInfo?.name ?? ""}</Name>
           </NameContainer>
         </AvatarNameContainer>
-        {isCurrentUser ? (
-          <EditButton onClick={handleEditProfileClick}>계정</EditButton>
-        ) : (
-          <ChatButton onClick={handleChatButtonClick}>메시지</ChatButton>
-        )}
+        <ButtonContainer>
+          {isCurrentUser && (
+            <>
+              <EditButton onClick={handleCameraClick}>갤러리</EditButton>
+              <EditButton onClick={handleEditProfileClick}>계정</EditButton>
+            </>
+          )}
+          {!isCurrentUser && <ChatButton onClick={handleChatButtonClick}>메시지</ChatButton>}
+        </ButtonContainer>
       </ProfileHeader>
 
       {/* Profile Description */}
@@ -744,15 +698,16 @@ export default function Profile() {
       {profile?.golfInfo?.scores && profile.golfInfo.scores.length > 0 && (
         <>
           <GolfScoresContainer>
-            <NavigationButton direction="left" onClick={handleScrollLeft} aria-label="Scroll Left">
+            {/* <NavigationButton direction="left" onClick={handleScrollLeft} aria-label="Scroll Left">
               ◀
             </NavigationButton>
             <NavigationButton direction="right" onClick={handleScrollRight} aria-label="Scroll Right">
               ▶
-            </NavigationButton>
+            </NavigationButton> */}
             <GolfScores ref={golfScoresRef}>
               {profile.golfInfo.scores
-                .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
+                // 최신 날짜 순으로 정렬하여 최근 스코어가 왼쪽에 오게 함
+                .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
                 .map((score, index) => {
                   const minS = minScore ?? score.score;
                   const maxS = maxScore ?? score.score;
@@ -766,9 +721,7 @@ export default function Profile() {
                   return (
                     <ScoreItem key={index}>
                       <ScoreValue>{score.score}</ScoreValue>
-                      <ScoreLine>
-                        <Dot style={{ bottom: `${positionPercentage}%` }} />
-                      </ScoreLine>
+                      <Dot style={{ height: `calc(${positionPercentage}% - 40px)` }} />
                       <ScoreDate>{formattedDate}</ScoreDate>
                     </ScoreItem>
                   );
