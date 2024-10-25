@@ -446,24 +446,6 @@ export default function Profile() {
     navigate('/manage-golf-scores');
   };
 
-  const handleScrollLeft = () => {
-    if (golfScoresRef.current) {
-      golfScoresRef.current.scrollBy({
-        left: -100,
-        behavior: 'smooth',
-      });
-    }
-  };
-
-  const handleScrollRight = () => {
-    if (golfScoresRef.current) {
-      golfScoresRef.current.scrollBy({
-        left: 100,
-        behavior: 'smooth',
-      });
-    }
-  };
-
   useEffect(() => {
     if (userId) {
       setCurrentProfileUserId(userId);
