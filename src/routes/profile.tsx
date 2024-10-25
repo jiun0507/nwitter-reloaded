@@ -1,6 +1,6 @@
 import { styled, createGlobalStyle } from "styled-components";
 import { ACTIVITY_FEEDS_USER_DB_PATH, auth, db, storage } from "../firebase";
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, TouchEvent } from "react";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { updateProfile } from "firebase/auth";
 import {
@@ -48,6 +48,7 @@ const BackgroundPhotoContainer = styled.div<BackgroundPhotoProps>`
   background-image: url(${props => props.bgUrl});
   background-size: cover;
   background-position: center;
+  transition: background-image 0.3s ease-in-out;
 `;
 
 const DotsContainer = styled.div`
@@ -62,28 +63,26 @@ const DotsContainer = styled.div`
 const BackgroundDot = styled.div<{ isActive: boolean }>`
   width: 10px;
   height: 10px;
-  background-color: ${props => (props.isActive ? "#D7D7D7" : "#2D2D2D")};
+  background-color: ${props => (props.isActive ? "#2D2D2D" : "#D7D7D7")};
   border-radius: 50%;
   cursor: pointer;
 `;
 
-const BackgroundNavButton = styled.button<{ direction: 'left' | 'right' }>`
-  position: absolute;
-  top: 50%;
-  ${(props) => (props.direction === 'left' ? 'left: -10px;' : 'right: 5px;')}
-  transform: translateY(-50%);
-  background:none;
-  border: none;
-  border-radius: 50%;
-  width: 40px;
-  height: 40px;
-  color: #ffffff;
-  cursor: pointer;
-  z-index: 10;
-
-
-  pointer-events: auto;
-`;
+// const BackgroundNavButton = styled.button<{ direction: 'left' | 'right' }>`
+//   position: absolute;
+//   top: 50%;
+//   ${(props) => (props.direction === 'left' ? 'left: -10px;' : 'right: 5px;')}
+//   transform: translateY(-50%);
+//   background:none;
+//   border: none;
+//   border-radius: 50%;
+//   width: 40px;
+//   height: 40px;
+//   color: #ffffff;
+//   cursor: pointer;
+//   z-index: 10;
+//   pointer-events: auto;
+// `;
 
 const ProfileHeader = styled.div`
   display: flex;
@@ -326,9 +325,6 @@ const EditButton = styled.button`
   cursor: pointer;
   font-size: 12px;
 
-  &:hover {
-    background-color: #45a049;
-  }
 `;
 
 const Tweets = styled.div`
@@ -402,8 +398,34 @@ export default function Profile() {
   const golfScoresRef = useRef<HTMLDivElement>(null);
   const [backgroundPhotos, setBackgroundPhotos] = useState<string[]>([]);
   const [currentBackgroundIndex, setCurrentBackgroundIndex] = useState<number>(0);
+  const [touchStart, setTouchStart] = useState<number | null>(null);
+  const [touchEnd, setTouchEnd] = useState<number | null>(null);
+  const [mouseStart, setMouseStart] = useState<number | null>(null);
+  const [preloadedImages, setPreloadedImages] = useState<HTMLImageElement[]>([]);
 
+  // 최소 스와이프 거리 설정
+  const minSwipeDistance = 50;
 
+  const onTouchStart = (e: TouchEvent<HTMLDivElement>) => {
+    setTouchEnd(null);
+    setTouchStart(e.targetTouches[0].clientX);
+  };
+
+  const onTouchMove = (e: TouchEvent<HTMLDivElement>) => {
+    setTouchEnd(e.targetTouches[0].clientX);
+  };
+
+  const onTouchEnd = () => {
+    if (!touchStart || !touchEnd) return;
+    const distance = touchStart - touchEnd;
+    const isLeftSwipe = distance > minSwipeDistance;
+    const isRightSwipe = distance < -minSwipeDistance;
+    if (isLeftSwipe) {
+      handleBackgroundNext();
+    } else if (isRightSwipe) {
+      handleBackgroundPrev();
+    }
+  };
 
   const handleCameraClick = () => {
     navigate("/edit-background-photos");
@@ -444,6 +466,23 @@ export default function Profile() {
 
   const handleAddScoreClick = () => {
     navigate('/manage-golf-scores');
+  };
+
+  const onMouseDown = (e: React.MouseEvent<HTMLDivElement>) => {
+    setMouseStart(e.clientX);
+  };
+
+  const onMouseUp = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (!mouseStart) return;
+    const distance = mouseStart - e.clientX;
+    if (Math.abs(distance) > minSwipeDistance) {
+      if (distance > 0) {
+        handleBackgroundNext();
+      } else {
+        handleBackgroundPrev();
+      }
+    }
+    setMouseStart(null);
   };
 
   useEffect(() => {
@@ -575,6 +614,31 @@ export default function Profile() {
     }
   };
 
+  // 이미지 프리로딩 함수
+  const preloadImages = (imageUrls: string[]) => {
+    const loadedImages = imageUrls.map(url => {
+      const img = new Image();
+      img.src = url;
+      return img;
+    });
+    setPreloadedImages(loadedImages);
+  };
+
+  // 프로필 데이터를 가져온 후 이미지 프리로딩
+  useEffect(() => {
+    if (backgroundPhotos.length > 0) {
+      preloadImages(backgroundPhotos);
+    }
+  }, [backgroundPhotos]);
+
+  // 백그라운드 이미지 URL 가져오기
+  const getBackgroundImageUrl = (index: number) => {
+    if (preloadedImages[index]) {
+      return preloadedImages[index].src;
+    }
+    return backgroundPhotos[index];
+  };
+
   if (isLoading) {
     return <div>Loading...</div>;
   }
@@ -587,25 +651,15 @@ export default function Profile() {
     <Wrapper>
       <GlobalStyle />
 
-      <BackgroundPhotoContainer bgUrl={backgroundPhotos[currentBackgroundIndex]}>
-
-
-
-
-        {/* Show Camera Icon only for current user */}
-
-
-        {/* Navigation Buttons for sliding background photos */}
-        {backgroundPhotos.length > 1 && (
-          <>
-            <BackgroundNavButton direction="left" onClick={handleBackgroundPrev} aria-label="Previous Background Photo">
-              <img src="/icon_arrow_slide_left_white.png" width="40px" height="40px" />
-            </BackgroundNavButton>
-            <BackgroundNavButton direction="right" onClick={handleBackgroundNext} aria-label="Next Background Photo">
-              <img src="/icon_arrow_slide_right_white.png" width="40px" height="40px" />
-            </BackgroundNavButton>
-          </>
-        )}
+      <BackgroundPhotoContainer 
+        bgUrl={getBackgroundImageUrl(currentBackgroundIndex)}
+        onTouchStart={onTouchStart}
+        onTouchMove={onTouchMove}
+        onTouchEnd={onTouchEnd}
+        onMouseDown={onMouseDown}
+        onMouseUp={onMouseUp}
+      >
+        {/* BackgroundNavButton 제거 */}
       </BackgroundPhotoContainer>
 
       {/* Dots Container moved below the background photo and above the avatar */}

@@ -400,21 +400,21 @@ export default function Tweet({
           {userPhoto ? (
             <Photo src={userPhoto} alt={`${username}'s profile`} />
           ) : (
-            <Photo src="/default_profile.svg" alt="Default profile" /> // Corrected path
+            <Photo src="/default_profile.svg" alt="Default profile" />
           )}
         </Link>
         <Username>{username}</Username>
       </Header>
-      <Payload>{tweet}</Payload>
       <Media>
         {photo && <img src={photo} alt="Tweet media" />}
         {video && (
           <video controls>
             <source src={video} type="video/mp4" />
-            Your browser does not support the video tag.
+            브라우저가 비디오 태그를 지원하지 않습니다.
           </video>
         )}
       </Media>
+      <Payload>{tweet}</Payload>
       {user?.uid === userId && canDelete && (
         <DeleteButton  onClick={onDelete}>
           <LikeIcon src="/icon_trash_red.svg" alt="Like" />

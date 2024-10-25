@@ -60,6 +60,7 @@ const PhotoCard = styled.div`
   border-radius: 10px;
   overflow: hidden;
   width: 100%;
+  padding-top: 100%; // 정사각형 비율을 위해 추가
   
   &:hover img {
     opacity: 0.8;
@@ -67,6 +68,9 @@ const PhotoCard = styled.div`
 `;
 
 const PhotoImg = styled.img`
+  position: absolute;
+  top: 0;
+  left: 0;
   width: 100%;
   height: 100%;
   object-fit: cover;
